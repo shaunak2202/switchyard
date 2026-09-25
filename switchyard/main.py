@@ -17,6 +17,8 @@ from switchyard.errors import GatewayError, InvalidRequestError
 from switchyard.logs import configure_logging
 from switchyard.middleware import RequestContextMiddleware
 from switchyard.providers import TransportFactory, build_providers
+from switchyard.reliability.backoff import RetryPolicy
+from switchyard.reliability.breaker import BreakerSettings, CircuitBreaker
 from switchyard.router import Router
 from switchyard.service import ChatService
 
@@ -35,9 +37,18 @@ def create_app(
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         providers = build_providers(config, transport_factory)
         router = Router(config, providers)
+        rel = config.reliability
+        breaker_settings = BreakerSettings(**rel.circuit_breaker.model_dump())
+        breakers = {name: CircuitBreaker(name, breaker_settings) for name in providers}
         app.state.config = config
         app.state.providers = providers
-        app.state.chat_service = ChatService(router)
+        app.state.breakers = breakers
+        app.state.chat_service = ChatService(
+            router,
+            breakers,
+            retry=RetryPolicy(**rel.retry.model_dump()),
+            request_timeout_s=rel.request_timeout_s,
+        )
         logger.info(
             "gateway started",
             extra={"providers": sorted(providers), "models": router.models()},

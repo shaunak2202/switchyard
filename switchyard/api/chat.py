@@ -21,6 +21,8 @@ router = APIRouter()
 PROVIDER_HEADER = "x-switchyard-provider"
 MODEL_HEADER = "x-switchyard-model"
 UPSTREAM_MS_HEADER = "x-switchyard-upstream-ms"
+ATTEMPTS_HEADER = "x-switchyard-attempts"
+FAILOVERS_HEADER = "x-switchyard-failovers"
 
 
 def _service(request: Request) -> ChatService:
@@ -41,6 +43,8 @@ async def chat_completions(body: ChatCompletionRequest, request: Request) -> Res
                 "x-accel-buffering": "no",
                 PROVIDER_HEADER: result.provider,
                 MODEL_HEADER: result.model,
+                ATTEMPTS_HEADER: str(len(result.trace.attempts)),
+                FAILOVERS_HEADER: str(result.trace.failovers),
             },
         )
 
@@ -51,6 +55,8 @@ async def chat_completions(body: ChatCompletionRequest, request: Request) -> Res
             PROVIDER_HEADER: completion.provider,
             MODEL_HEADER: completion.model,
             UPSTREAM_MS_HEADER: f"{completion.upstream_ms:.1f}",
+            ATTEMPTS_HEADER: str(len(completion.trace.attempts)),
+            FAILOVERS_HEADER: str(completion.trace.failovers),
         },
     )
 

@@ -4,6 +4,20 @@
 logging:
   level: ${SWITCHYARD_LOG_LEVEL:-INFO}
 
+reliability:
+  # End-to-end budget for one request across all retries and failovers (to first byte).
+  request_timeout_s: 60
+  retry:
+    max_attempts: 2          # per provider, including the first try
+    base_delay_s: 0.05       # full-jitter window starts at 50 ms...
+    max_delay_s: 1.0         # ...and doubles up to 1 s
+  circuit_breaker:
+    window_size: 20          # sliding window of the last N calls per provider
+    min_calls: 10            # don't judge a provider on fewer calls than this
+    failure_rate_threshold: 0.5
+    open_s: 10               # how long to shed traffic before a trial call
+    half_open_max_calls: 1
+
 providers:
   groq:
     type: groq

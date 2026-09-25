@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
+import time
 from collections.abc import Iterator
 
 import httpx
@@ -63,3 +65,48 @@ def test_kill_mock_mid_stream_does_not_hang_client() -> None:
     events = [line[6:] for line in resp.text.split("\n") if line.startswith("data: ")]
     assert "[DONE]" not in events
     assert "error" in json.loads(events[-1])
+
+
+def _compose(*args: str) -> None:
+    subprocess.run(["docker", "compose", *args], check=True, capture_output=True, timeout=120)
+
+
+def test_kill_primary_container_mid_stream_then_fail_over() -> None:
+    """SIGKILL the primary mock's container while it is streaming to us."""
+    httpx.patch(
+        f"{MOCK_PRIMARY}/admin/config", json={"inter_token_ms": 100, "output_tokens": 100}
+    ).raise_for_status()
+    try:
+        events: list[str] = []
+        started = time.monotonic()
+        with httpx.stream(
+            "POST",
+            f"{GATEWAY}/v1/chat/completions",
+            json={"model": "mock", "messages": MESSAGES, "stream": True},
+            timeout=30,
+        ) as resp:
+            assert resp.headers["x-switchyard-provider"] == "mock-primary"
+            for line in resp.iter_lines():
+                if not line.startswith("data: "):
+                    continue
+                events.append(line[6:])
+                if len(events) == 3:
+                    _compose("kill", "mock-primary")
+        elapsed = time.monotonic() - started
+
+        # The client gets an error event and the stream ends; it does not hang.
+        assert "[DONE]" not in events
+        assert json.loads(events[-1])["error"]["type"] == "upstream_error"
+        assert elapsed < 10
+
+        # New requests fail over to the secondary while the primary is down.
+        resp2 = httpx.post(
+            f"{GATEWAY}/v1/chat/completions",
+            json={"model": "mock", "messages": MESSAGES},
+            timeout=30,
+        )
+        assert resp2.status_code == 200
+        assert resp2.headers["x-switchyard-provider"] == "mock-secondary"
+        assert int(resp2.headers["x-switchyard-failovers"]) == 1
+    finally:
+        _compose("up", "-d", "--wait", "mock-primary")

@@ -36,6 +36,16 @@ class FailureKind(StrEnum):
         """Worth trying the *next* provider. Only a malformed client request is final."""
         return self is not FailureKind.BAD_REQUEST
 
+    @property
+    def counts_against_provider(self) -> bool:
+        """Evidence that the provider is unhealthy, for the circuit breaker. A bad request or a
+        model the provider does not serve says nothing about its health."""
+        return self not in (
+            FailureKind.BAD_REQUEST,
+            FailureKind.NOT_FOUND,
+            FailureKind.CIRCUIT_OPEN,
+        )
+
 
 _RETRYABLE = frozenset(
     {

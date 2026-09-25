@@ -75,12 +75,34 @@ class Route(_Strict):
     targets: list[RouteTarget] = Field(min_length=1)
 
 
+class RetryConfig(_Strict):
+    max_attempts: int = Field(default=2, ge=1, le=10)
+    base_delay_s: float = Field(default=0.05, ge=0)
+    max_delay_s: float = Field(default=1.0, ge=0)
+
+
+class CircuitBreakerConfig(_Strict):
+    window_size: int = Field(default=20, ge=1)
+    min_calls: int = Field(default=10, ge=1)
+    failure_rate_threshold: float = Field(default=0.5, gt=0, le=1)
+    open_s: float = Field(default=10.0, gt=0)
+    half_open_max_calls: int = Field(default=1, ge=1)
+
+
+class ReliabilityConfig(_Strict):
+    request_timeout_s: float = Field(default=60.0, gt=0)
+    """End-to-end budget across all retries and failovers, up to the first streamed byte."""
+    retry: RetryConfig = RetryConfig()
+    circuit_breaker: CircuitBreakerConfig = CircuitBreakerConfig()
+
+
 class LoggingConfig(_Strict):
     level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
 
 
 class GatewayConfig(_Strict):
     logging: LoggingConfig = LoggingConfig()
+    reliability: ReliabilityConfig = ReliabilityConfig()
     providers: dict[str, ProviderConfig]
     routes: list[Route] = Field(min_length=1)
 

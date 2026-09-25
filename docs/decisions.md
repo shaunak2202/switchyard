@@ -109,3 +109,58 @@ request's logged duration is its real duration.
 ephemeral ports in background threads. httpx's `ASGITransport` buffers response bodies, so it
 cannot show that streaming really streams, and it cannot simulate a dropped TCP connection.
 Container-level tests (`-m integration`) additionally run against `docker compose`.
+
+---
+
+## ADR-008: Full-jitter backoff, `Retry-After` as a floor, one request deadline
+
+**Date:** 2026-09-25 · **Status:** accepted
+
+**Context.** When a provider blips, every in-flight request fails at nearly the same instant.
+Deterministic exponential backoff makes them all retry at the same instant too.
+
+**Decision.** Delay before retry *n* is `uniform(0, min(max_delay, base · 2^(n-1)))` (full
+jitter). A provider's `Retry-After` is a floor on that delay. If `Retry-After` is longer than
+`max_delay_s`, we skip the remaining retries on that provider and fail over, instead of holding
+the client. All retries and failovers for one request share one `request_timeout_s` deadline.
+
+**Consequences.** Retrying non-streaming LLM calls is not free: a request that timed out on
+our side may still have been generated, and billed, upstream. `max_attempts` defaults to 2 per
+provider for that reason.
+
+---
+
+## ADR-009: Failure-rate circuit breaker over a count-based sliding window
+
+**Date:** 2026-09-25 · **Status:** accepted
+
+**Context.** A consecutive-failures breaker never trips on a provider that fails every other
+request: each success resets the count.
+
+**Decision.** Each provider has a breaker over its last `window_size` calls. It opens when at
+least `min_calls` outcomes are recorded and the failure rate is at least
+`failure_rate_threshold`. After `open_s` it goes half-open and admits `half_open_max_calls`
+trial calls. Only failures that say something about provider health count: bad requests and
+unknown models are excluded, and a client disconnect is neither a success nor a failure. A
+stream's outcome is recorded when the stream *ends*, so a mid-stream drop counts against the
+provider.
+
+**Consequences.** When a breaker is open, failover to the next provider costs nothing: no
+timeout is paid on a provider we already know is bad. Every `allow()` is paired with exactly one
+of `record_success`, `record_failure` or `release`, including on cancellation. Otherwise a
+half-open breaker would leak its trial permit and stay half-open forever. There is a test for
+this.
+
+---
+
+## ADR-010: Breaker state is per process
+
+**Date:** 2026-09-25 · **Status:** accepted
+
+**Decision.** Breakers live in process memory, not in Redis.
+
+**Consequences.** With N workers or replicas, each detects a bad provider on its own, which
+costs up to N × `min_calls` failed requests instead of `min_calls`. In exchange, the hot path
+makes no extra network round trip per request, and there is no shared-state failure mode (Redis
+down should not mean "every breaker is open"). Envoy's outlier detection makes the same
+per-host trade-off.

@@ -149,7 +149,9 @@ async def test_hanging_upstream_times_out_with_504(client: httpx.AsyncClient, mo
         "/v1/chat/completions", json={"model": "only-a", "messages": MESSAGES, "stream": True}
     )
     assert resp.status_code == 504
-    assert time.perf_counter() - started < 1.5  # first_byte_s=1 in the test config
+    # first_byte_s=1, one retry: two bounded attempts, not a hang.
+    assert time.perf_counter() - started < 2.5
+    assert mocks[0].stats()["requests"] == 2
 
 
 @pytest.mark.parametrize("fault", ["stream_abort_rate", "stream_stall_rate"])
@@ -183,4 +185,5 @@ async def test_health_endpoints(client: httpx.AsyncClient) -> None:
     ready = await client.get("/readyz")
     assert ready.status_code == 200
     status = (await client.get("/status/providers")).json()
-    assert status == {"mock-a": {"healthy": True}, "mock-b": {"healthy": True}}
+    assert status["mock-a"]["healthy"] is True
+    assert status["mock-b"]["circuit"] == "closed"

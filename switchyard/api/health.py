@@ -34,8 +34,16 @@ async def readyz(request: Request) -> JSONResponse:
 
 
 @router.get("/status/providers")
-async def provider_status(request: Request) -> dict[str, dict[str, bool]]:
+async def provider_status(request: Request) -> dict[str, dict[str, object]]:
     providers = request.app.state.providers
+    breakers = request.app.state.breakers
     names = list(providers)
     results = await asyncio.gather(*(providers[name].health() for name in names))
-    return {name: {"healthy": healthy} for name, healthy in zip(names, results, strict=True)}
+    return {
+        name: {
+            "healthy": healthy,
+            "circuit": breakers[name].state.name.lower(),
+            "failure_rate": round(breakers[name].failure_rate(), 3),
+        }
+        for name, healthy in zip(names, results, strict=True)
+    }

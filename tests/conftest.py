@@ -4,7 +4,7 @@ import socket
 import threading
 import time
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass
 from typing import Any
 
@@ -76,11 +76,30 @@ def mock_b() -> Iterator[MockServer]:
         yield MockServer(url)
 
 
-def gateway_config(mock_a_url: str, mock_b_url: str, **timeouts: float) -> GatewayConfig:
-    t = {"connect_s": 1, "first_byte_s": 1, "idle_s": 0.5, "total_s": 2} | timeouts
+# The shared gateway's breaker never trips, so one test's injected failures can't leak into
+# the next. Reliability tests build their own gateway with ``make_gateway``.
+NEVER_TRIP = {"window_size": 10_000, "min_calls": 10_000}
+FAST_RETRY = {"max_attempts": 2, "base_delay_s": 0.01, "max_delay_s": 0.05}
+
+
+def gateway_config(
+    mock_a_url: str,
+    mock_b_url: str,
+    *,
+    timeouts: dict[str, float] | None = None,
+    retry: dict[str, float] | None = None,
+    breaker: dict[str, float] | None = None,
+    request_timeout_s: float = 10,
+) -> GatewayConfig:
+    t = {"connect_s": 1, "first_byte_s": 1, "idle_s": 0.5, "total_s": 2} | (timeouts or {})
     return GatewayConfig.model_validate(
         {
             "logging": {"level": "WARNING"},
+            "reliability": {
+                "request_timeout_s": request_timeout_s,
+                "retry": FAST_RETRY | (retry or {}),
+                "circuit_breaker": breaker or NEVER_TRIP,
+            },
             "providers": {
                 "mock-a": {"type": "mock", "base_url": f"{mock_a_url}/v1", "timeouts": t},
                 "mock-b": {"type": "mock", "base_url": f"{mock_b_url}/v1", "timeouts": t},
@@ -104,6 +123,18 @@ def gateway_url(mock_a: MockServer, mock_b: MockServer) -> Iterator[str]:
     app = create_gateway_app(gateway_config(mock_a.url, mock_b.url))
     with run_server(app) as url:
         yield url
+
+
+@pytest.fixture
+def make_gateway(mock_a: MockServer, mock_b: MockServer) -> Iterator[Any]:
+    """Start a dedicated gateway (fresh breakers) with custom reliability settings."""
+    with ExitStack() as stack:
+
+        def start(**kwargs: Any) -> str:
+            app = create_gateway_app(gateway_config(mock_a.url, mock_b.url, **kwargs))
+            return stack.enter_context(run_server(app))
+
+        yield start
 
 
 @pytest.fixture
