@@ -21,6 +21,8 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: mypy switchyard mock_provider tests
+      - name: Dashboard JSON matches its generator
+        run: python scripts/build_dashboard.py --check
       - name: README tables match results/
         run: python scripts/render_readme.py --check
 

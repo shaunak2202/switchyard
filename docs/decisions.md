@@ -312,3 +312,29 @@ mode still exists (`verifier_model: null`) but logs a warning at startup.
   the number of near-neighbours in the cache, so the rule should be re-checked on real traffic.
 - Changing either model invalidates the thresholds. Re-run
   `scripts/eval_semantic_threshold.py` first.
+
+---
+
+## ADR-017: Observability: bounded labels, one process per container, overhead as a metric
+
+**Date:** 2026-09-25 · **Status:** accepted
+
+**Decision.**
+- **Bounded label cardinality.** Labels only ever take values from config (route aliases,
+  provider names) or from enums (status, cache outcome, failure kind). A caller-chosen string
+  such as a pinned `groq/<anything>` is recorded as `route="groq/*"`, and API keys appear only
+  in logs (as the non-secret `key_id`), never as labels. There is a test for this.
+- **One process per container.** prometheus_client's default registry is per process. Scaling
+  is by container replicas (each scraped separately), not uvicorn workers, which would require
+  multiprocess mode and its file-based shared state. This matches ADR-010 (per-process
+  breakers).
+- **Gateway overhead is a first-class metric.** For non-streaming requests it is total latency
+  minus the successful upstream attempt's latency. For streams it is time to first byte minus
+  the upstream's time to first chunk. It is measured on the server, and the load tests
+  cross-check it against the client-side total minus the mock's configured latency.
+- **Durations end at the last body byte.** Starlette runs background work (token settlement)
+  after sending the response but inside the same ASGI call. Timing the call would inflate
+  latency, so the middleware timestamps the final body message.
+- **Dashboards as code.** `scripts/build_dashboard.py` generates the provisioned Grafana JSON.
+  CI fails if the committed JSON is stale, and a check during development confirmed every panel
+  query is valid PromQL.

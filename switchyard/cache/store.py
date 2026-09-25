@@ -23,6 +23,7 @@ import numpy as np
 from redis.asyncio import Redis
 from redis.exceptions import RedisError, ResponseError
 
+from switchyard import metrics
 from switchyard.cache.embeddings import Embedder, Vector, Verifier
 from switchyard.cache.normalize import (
     CacheDirective,
@@ -153,8 +154,11 @@ class SemanticCache:
         verifier_score = None
         if self.verifier is not None:
             cached_prompt = _key_str(values["prompt"])
+            started = time.perf_counter()
             verifier_score = await self.verifier.score(text, cached_prompt)
+            metrics.EMBEDDING_DURATION.labels("verifier").observe(time.perf_counter() - started)
             if verifier_score < self.verifier_threshold:
+                metrics.CACHE_VERIFIER_REJECTIONS.inc()
                 logger.debug(
                     "semantic candidate rejected by verifier",
                     extra={"similarity": round(similarity, 4), "score": round(verifier_score, 4)},
@@ -241,15 +245,22 @@ class ResponseCache:
         try:
             if self.exact is not None:
                 result.hit = await self.exact.get(digest)
+                metrics.CACHE_LOOKUPS.labels("exact", "hit" if result.hit else "miss").inc()
                 if result.hit:
                     return result
             if self.semantic is not None and result.semantic is not None:
+                started = time.perf_counter()
                 result.vector = await self.semantic.embedder.embed(result.semantic.text)
+                metrics.EMBEDDING_DURATION.labels("embedding").observe(
+                    time.perf_counter() - started
+                )
                 result.hit = await self.semantic.search(
                     result.semantic.namespace, result.semantic.text, result.vector
                 )
+                metrics.CACHE_LOOKUPS.labels("semantic", "hit" if result.hit else "miss").inc()
         except (RedisError, ValueError) as exc:
             logger.warning("cache lookup failed; treating as miss", extra={"error": repr(exc)})
+            metrics.CACHE_LOOKUPS.labels("any", "error").inc()
             result.hit = None
         return result
 

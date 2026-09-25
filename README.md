@@ -6,8 +6,8 @@ fault-injecting mock), streams tokens back over SSE, and fails cleanly when an u
 misbehaves. It is built as a production-style service: structured logs, request tracing, typed
 config, and tests that exercise real sockets and real failure modes.
 
-> **Status:** Phases 1–4 (core proxy, reliability, auth and rate limiting, caching) of 6 are
-> done. Observability and load-test results are in progress. Performance numbers are `TBD` until they
+> **Status:** Phases 1–5 (core proxy, reliability, auth and rate limiting, caching,
+> observability) of 6 are done. Load-test results are in progress. Performance numbers are `TBD` until they
 > are measured and saved in `results/`.
 
 ## Architecture
@@ -31,6 +31,8 @@ flowchart LR
     A3 --> M[(mock-provider)]
     AU <--> RD[(Redis 8<br/>keys · buckets · cache · HNSW index)]
     CA <--> RD
+    P[Prometheus] -->|scrape /metrics| GW
+    GF[Grafana] --> P
 ```
 
 ## Quick start
@@ -39,7 +41,7 @@ Requires Docker with Compose v2 and Python 3.11 (for the tests).
 
 ```bash
 git clone <this repo> && cd switchyard
-make up                      # build + start gateway, 2 mock providers, Redis; waits for health
+make up                      # gateway, 2 mock providers, Redis, Prometheus, Grafana; waits for health
 make key NAME=me             # prints a new API key (shown once) as JSON
 export KEY=sk-sy-...         # paste the api_key value
 curl -s localhost:8000/v1/chat/completions \
@@ -127,6 +129,12 @@ Longer write-ups are in [`docs/decisions.md`](docs/decisions.md).
 - **Tracing and logs.** Every response carries `x-request-id` (the caller's, if it is sane).
   Logs are one JSON object per line with the request ID attached, including logs written from
   inside streaming generators.
+- **Metrics and dashboard.** `/metrics` exposes request rate, latency histograms (overall,
+  time to first token, and gateway overhead: total minus upstream time), cache hits and misses
+  per tier, 429s and 401s, circuit-breaker state, failovers, retries, and upstream errors by
+  provider and kind. Grafana (http://localhost:3000) provisions a dashboard *generated from
+  code* (`scripts/build_dashboard.py`). Label values are always bounded, so a caller can't blow
+  up metric cardinality. [ADR-017]
 - **Health.** `/healthz` (liveness), `/readyz` (config and Redis only; see ADR-005), and
   `/status/providers` (on-demand upstream probes).
 - **Mock provider.** Simulates time to first token, token pacing, HTTP errors, hangs, dropped

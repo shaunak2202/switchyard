@@ -13,7 +13,8 @@ from __future__ import annotations
 import asyncio
 
 from fastapi import APIRouter, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from redis.exceptions import RedisError
 
 router = APIRouter()
@@ -56,3 +57,8 @@ async def provider_status(request: Request) -> dict[str, dict[str, object]]:
         }
         for name, healthy in zip(names, results, strict=True)
     }
+
+
+@router.get("/metrics", include_in_schema=False)
+async def prometheus_metrics() -> Response:
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)

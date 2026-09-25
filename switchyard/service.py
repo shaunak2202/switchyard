@@ -25,6 +25,7 @@ from collections.abc import AsyncGenerator, Awaitable, Callable, Mapping
 from dataclasses import dataclass, field
 from typing import TypeVar
 
+from switchyard import metrics
 from switchyard.errors import (
     FailureKind,
     ProviderError,
@@ -55,6 +56,8 @@ class CallTrace:
 
     attempts: list[Attempt] = field(default_factory=list)
     started: float = field(default_factory=time.perf_counter)
+    upstream_s: float = 0.0
+    """Duration of the successful attempt: the whole call, or time to first chunk for streams."""
 
     @property
     def failovers(self) -> int:
@@ -168,6 +171,7 @@ class ChatService:
             name = target.provider.name
             breaker = self.breakers[name]
             if index > 0 and trace.attempts:
+                metrics.FAILOVERS.labels(trace.attempts[-1].provider, name).inc()
                 logger.warning(
                     "failing over",
                     extra={
@@ -180,13 +184,17 @@ class ChatService:
             for attempt in range(1, self.retry.max_attempts + 1):
                 if not breaker.allow():
                     trace.attempts.append(Attempt(name, FailureKind.CIRCUIT_OPEN))
+                    metrics.UPSTREAM_ATTEMPTS.labels(name, FailureKind.CIRCUIT_OPEN.value).inc()
                     break
+                attempt_started = time.perf_counter()
                 try:
                     async with asyncio.timeout_at(deadline):
                         result = await call(target)
                 except ProviderError as err:
                     self._record_failure(breaker, err)
                     trace.attempts.append(Attempt(name, err.kind))
+                    metrics.UPSTREAM_ATTEMPTS.labels(name, err.kind.value).inc()
+                    metrics.UPSTREAM_ERRORS.labels(name, err.kind.value).inc()
                     last_real_error = err
                     logger.warning(
                         "provider call failed",
@@ -206,10 +214,12 @@ class ChatService:
                     delay = self.retry.delay(attempt, err.retry_after_s)
                     if delay is None or loop.time() + delay >= deadline:
                         break
+                    metrics.RETRIES.labels(name).inc()
                     await self._sleep(delay)
                 except TimeoutError:
                     breaker.release()
                     trace.attempts.append(Attempt(name, FailureKind.TIMEOUT))
+                    metrics.UPSTREAM_ATTEMPTS.labels(name, "request_budget_exceeded").inc()
                     raise UpstreamError(
                         f"request exceeded the gateway budget of {self.request_timeout_s:g}s",
                         code="request_timeout",
@@ -219,7 +229,12 @@ class ChatService:
                     breaker.release()  # cancelled (client went away) or a bug; not evidence
                     raise
                 else:
+                    trace.upstream_s = time.perf_counter() - attempt_started
                     trace.attempts.append(Attempt(name, None))
+                    metrics.UPSTREAM_ATTEMPTS.labels(name, "success").inc()
+                    metrics.UPSTREAM_DURATION.labels(name, str(request.stream).lower()).observe(
+                        trace.upstream_s
+                    )
                     return result, target
 
         if last_real_error is not None:
@@ -252,6 +267,7 @@ class ChatService:
             settled = True
         except ProviderError as err:
             self._record_failure(breaker, err)
+            metrics.MID_STREAM_FAILURES.labels(err.provider, err.kind.value).inc()
             settled = True
             raise
         finally:

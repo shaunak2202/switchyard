@@ -23,7 +23,9 @@ install: $(BIN)/activate ## Create the virtualenv and install dev dependencies
 up: ## Build and start the full stack (gateway, mocks, redis)
 	@test -f .env || cp .env.example .env
 	$(COMPOSE) up -d --build --wait
-	@echo "gateway: http://localhost:8000"
+	@echo "gateway:    http://localhost:8000"
+	@echo "grafana:    http://localhost:3000  (dashboard: Switchyard gateway)"
+	@echo "prometheus: http://localhost:9090"
 
 .PHONY: down
 down: ## Stop the stack
@@ -62,6 +64,10 @@ fmt: install ## Auto-format
 .PHONY: typecheck
 typecheck: install ## mypy --strict
 	$(BIN)/mypy
+
+.PHONY: dashboard
+dashboard: ## Regenerate the Grafana dashboard JSON from scripts/build_dashboard.py
+	$(BIN)/python scripts/build_dashboard.py
 
 .PHONY: readme
 readme: ## Regenerate README tables from results/

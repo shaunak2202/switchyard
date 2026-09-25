@@ -8,6 +8,7 @@ import anyio
 from fastapi import Request
 from redis.exceptions import RedisError
 
+from switchyard import metrics
 from switchyard.auth.keys import KeyStore, hash_api_key
 from switchyard.errors import (
     AuthenticationError,
@@ -50,6 +51,7 @@ class Guard:
             return None
         api_key = bearer_token(request)
         if api_key is None:
+            metrics.AUTH_FAILURES.labels("missing").inc()
             raise AuthenticationError("Missing API key. Send 'Authorization: Bearer <key>'.")
         cost = estimate_request_tokens(body, self.default_max_tokens)
         try:
@@ -66,6 +68,8 @@ class Guard:
             case AdmitStatus.ADMITTED:
                 return decision
             case AdmitStatus.LIMITED:
+                bucket = "requests" if decision.remaining_requests < 1 else "tokens"
+                metrics.RATE_LIMITED.labels(bucket).inc()
                 raise RateLimitError(
                     f"Rate limit exceeded for {decision.key_id}. "
                     f"Retry after {decision.retry_after_s}s.",
@@ -80,8 +84,10 @@ class Guard:
                     param="max_tokens",
                 )
             case AdmitStatus.DISABLED:
+                metrics.AUTH_FAILURES.labels("disabled").inc()
                 raise AuthenticationError("This API key has been disabled.")
             case _:
+                metrics.AUTH_FAILURES.labels("unknown_key").inc()
                 raise AuthenticationError()
 
     async def authenticate(self, request: Request) -> None:

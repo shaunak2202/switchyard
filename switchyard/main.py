@@ -11,7 +11,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from redis.asyncio import BlockingConnectionPool, Redis
 
-from switchyard import __version__
+from switchyard import __version__, metrics
 from switchyard.api import chat, health
 from switchyard.api.guard import Guard
 from switchyard.auth.keys import KeyStore
@@ -29,7 +29,7 @@ from switchyard.middleware import RequestContextMiddleware
 from switchyard.providers import TransportFactory, build_providers
 from switchyard.ratelimit.limiter import RateLimiter
 from switchyard.reliability.backoff import RetryPolicy
-from switchyard.reliability.breaker import BreakerSettings, CircuitBreaker
+from switchyard.reliability.breaker import BreakerSettings, BreakerState, CircuitBreaker
 from switchyard.router import Router
 from switchyard.service import ChatService
 from switchyard.tasks import BackgroundTasks
@@ -77,7 +77,12 @@ def create_app(
         router = Router(config, providers)
         rel = config.reliability
         breaker_settings = BreakerSettings(**rel.circuit_breaker.model_dump())
-        breakers = {name: CircuitBreaker(name, breaker_settings) for name in providers}
+        breakers = {
+            name: CircuitBreaker(name, breaker_settings, on_state_change=_export_breaker_state)
+            for name in providers
+        }
+        for name in providers:
+            metrics.CIRCUIT_STATE.labels(name).set(BreakerState.CLOSED)
         app.state.config = config
         app.state.providers = providers
         app.state.breakers = breakers
@@ -105,6 +110,11 @@ def create_app(
     app.include_router(health.router)
     _install_error_handlers(app)
     return app
+
+
+def _export_breaker_state(provider: str, _old: BreakerState, new: BreakerState) -> None:
+    metrics.CIRCUIT_STATE.labels(provider).set(new)
+    metrics.CIRCUIT_TRANSITIONS.labels(provider, new.name.lower()).inc()
 
 
 async def _build_cache(
