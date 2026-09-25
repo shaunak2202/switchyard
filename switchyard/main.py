@@ -9,14 +9,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from redis.asyncio import BlockingConnectionPool, Redis
 
 from switchyard import __version__
 from switchyard.api import chat, health
+from switchyard.api.guard import Guard
+from switchyard.auth.keys import KeyStore
 from switchyard.config import GatewayConfig, load_config
 from switchyard.errors import GatewayError, InvalidRequestError
 from switchyard.logs import configure_logging
 from switchyard.middleware import RequestContextMiddleware
 from switchyard.providers import TransportFactory, build_providers
+from switchyard.ratelimit.limiter import RateLimiter
 from switchyard.reliability.backoff import RetryPolicy
 from switchyard.reliability.breaker import BreakerSettings, CircuitBreaker
 from switchyard.router import Router
@@ -35,6 +39,28 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        # A *blocking* pool: redis-py's default async pool raises MaxConnectionsError the
+        # moment it is exhausted, which would turn a traffic burst into 503s. This one queues
+        # callers for up to socket_timeout_s instead.
+        redis = Redis(
+            connection_pool=BlockingConnectionPool.from_url(
+                config.redis.url,
+                max_connections=config.redis.max_connections,
+                timeout=config.redis.socket_timeout_s,
+                socket_timeout=config.redis.socket_timeout_s,
+                socket_connect_timeout=config.redis.socket_timeout_s,
+            )
+        )
+        keys = KeyStore(redis, config.redis.key_prefix)
+        app.state.redis = redis
+        app.state.guard = Guard(
+            RateLimiter(redis, keys),
+            keys,
+            enabled=config.auth.enabled,
+            default_max_tokens=config.auth.default_max_tokens,
+        )
+        if not config.auth.enabled:
+            logger.warning("auth is DISABLED: every request is anonymous and unlimited")
         providers = build_providers(config, transport_factory)
         router = Router(config, providers)
         rel = config.reliability
@@ -58,6 +84,7 @@ def create_app(
         finally:
             for provider in providers.values():
                 await provider.aclose()
+            await redis.aclose()
 
     app = FastAPI(title="Switchyard", version=__version__, lifespan=lifespan)
     app.add_middleware(RequestContextMiddleware)

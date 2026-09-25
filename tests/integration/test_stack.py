@@ -22,38 +22,78 @@ MOCK_PRIMARY = os.environ.get("MOCK_PRIMARY_ADMIN_URL", "http://localhost:9001")
 MESSAGES = [{"role": "user", "content": "integration"}]
 
 
-@pytest.fixture(autouse=True)
-def stack() -> Iterator[None]:
+@pytest.fixture(scope="module")
+def api_key() -> str:
+    """Issue a key the way an operator would: the CLI inside the gateway container."""
     try:
         httpx.get(f"{GATEWAY}/readyz", timeout=2).raise_for_status()
     except httpx.HTTPError:
         pytest.skip("compose stack is not running (make up)")
+    out = subprocess.run(
+        [
+            "docker",
+            "compose",
+            "exec",
+            "-T",
+            "gateway",
+            "python",
+            "-m",
+            "switchyard.cli",
+            "keys",
+            "create",
+            "--name",
+            "integration",
+            "--rpm",
+            "100000",
+            "--tpm",
+            "100000000",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    ).stdout
+    key: str = json.loads(out)["api_key"]
+    return key
+
+
+@pytest.fixture(autouse=True)
+def stack(api_key: str) -> Iterator[None]:
     httpx.post(f"{MOCK_PRIMARY}/admin/reset")
     yield
     httpx.post(f"{MOCK_PRIMARY}/admin/reset")
 
 
-def test_completion_through_containers() -> None:
+@pytest.fixture
+def auth(api_key: str) -> dict[str, str]:
+    return {"authorization": f"Bearer {api_key}"}
+
+
+def test_completion_through_containers(auth: dict[str, str]) -> None:
     resp = httpx.post(
-        f"{GATEWAY}/v1/chat/completions", json={"model": "mock", "messages": MESSAGES}, timeout=10
+        f"{GATEWAY}/v1/chat/completions",
+        json={"model": "mock", "messages": MESSAGES},
+        timeout=10,
+        headers=auth,
     )
     assert resp.status_code == 200
     assert resp.headers["x-switchyard-provider"] == "mock-primary"
 
 
-def test_stream_through_containers() -> None:
+def test_stream_through_containers(auth: dict[str, str]) -> None:
     with httpx.stream(
         "POST",
         f"{GATEWAY}/v1/chat/completions",
         json={"model": "mock", "messages": MESSAGES, "stream": True},
         timeout=10,
+        headers=auth,
     ) as resp:
         events = [line[6:] for line in resp.iter_lines() if line.startswith("data: ")]
     assert events[-1] == "[DONE]"
     assert all("choices" in json.loads(e) for e in events[:-1])
 
 
-def test_kill_mock_mid_stream_does_not_hang_client() -> None:
+def test_kill_mock_mid_stream_does_not_hang_client(auth: dict[str, str]) -> None:
     httpx.patch(
         f"{MOCK_PRIMARY}/admin/config", json={"stream_abort_rate": 1.0, "fail_after_tokens": 3}
     ).raise_for_status()
@@ -61,6 +101,7 @@ def test_kill_mock_mid_stream_does_not_hang_client() -> None:
         f"{GATEWAY}/v1/chat/completions",
         json={"model": "mock-primary/mock-1", "messages": MESSAGES, "stream": True},
         timeout=10,
+        headers=auth,
     )
     events = [line[6:] for line in resp.text.split("\n") if line.startswith("data: ")]
     assert "[DONE]" not in events
@@ -71,7 +112,43 @@ def _compose(*args: str) -> None:
     subprocess.run(["docker", "compose", *args], check=True, capture_output=True, timeout=120)
 
 
-def test_kill_primary_container_mid_stream_then_fail_over() -> None:
+def test_rate_limit_through_containers() -> None:
+    out = subprocess.run(
+        [
+            "docker",
+            "compose",
+            "exec",
+            "-T",
+            "gateway",
+            "python",
+            "-m",
+            "switchyard.cli",
+            "keys",
+            "create",
+            "--name",
+            "tiny",
+            "--rpm",
+            "2",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    ).stdout
+    headers = {"authorization": f"Bearer {json.loads(out)['api_key']}"}
+    codes = [
+        httpx.post(
+            f"{GATEWAY}/v1/chat/completions",
+            json={"model": "mock", "messages": MESSAGES},
+            headers=headers,
+            timeout=10,
+        ).status_code
+        for _ in range(3)
+    ]
+    assert codes == [200, 200, 429]
+
+
+def test_kill_primary_container_mid_stream_then_fail_over(auth: dict[str, str]) -> None:
     """SIGKILL the primary mock's container while it is streaming to us."""
     httpx.patch(
         f"{MOCK_PRIMARY}/admin/config", json={"inter_token_ms": 100, "output_tokens": 100}
@@ -84,6 +161,7 @@ def test_kill_primary_container_mid_stream_then_fail_over() -> None:
             f"{GATEWAY}/v1/chat/completions",
             json={"model": "mock", "messages": MESSAGES, "stream": True},
             timeout=30,
+            headers=auth,
         ) as resp:
             assert resp.headers["x-switchyard-provider"] == "mock-primary"
             for line in resp.iter_lines():
@@ -104,6 +182,7 @@ def test_kill_primary_container_mid_stream_then_fail_over() -> None:
             f"{GATEWAY}/v1/chat/completions",
             json={"model": "mock", "messages": MESSAGES},
             timeout=30,
+            headers=auth,
         )
         assert resp2.status_code == 200
         assert resp2.headers["x-switchyard-provider"] == "mock-secondary"

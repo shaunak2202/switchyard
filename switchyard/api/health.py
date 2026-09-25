@@ -14,6 +14,7 @@ import asyncio
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
+from redis.exceptions import RedisError
 
 router = APIRouter()
 
@@ -25,12 +26,20 @@ async def healthz() -> dict[str, str]:
 
 @router.get("/readyz")
 async def readyz(request: Request) -> JSONResponse:
-    checks: dict[str, bool] = {"config": True}
+    checks: dict[str, bool] = {"config": True, "redis": await _redis_ok(request)}
     ready = all(checks.values())
     return JSONResponse(
         {"status": "ready" if ready else "not_ready", "checks": checks},
         status_code=200 if ready else 503,
     )
+
+
+async def _redis_ok(request: Request) -> bool:
+    try:
+        async with asyncio.timeout(1.0):
+            return bool(await request.app.state.redis.ping())
+    except (RedisError, OSError, TimeoutError):
+        return False
 
 
 @router.get("/status/providers")

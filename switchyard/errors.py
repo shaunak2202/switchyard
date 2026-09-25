@@ -139,6 +139,19 @@ class ModelNotFoundError(GatewayError):
         )
 
 
+class AuthenticationError(GatewayError):
+    status_code = 401
+    error_type = "invalid_request_error"
+
+    def __init__(self, message: str = "Invalid or missing API key.") -> None:
+        super().__init__(message, code="invalid_api_key", headers={"www-authenticate": "Bearer"})
+
+
+class RateLimitError(GatewayError):
+    status_code = 429
+    error_type = "rate_limit_error"
+
+
 class UpstreamError(GatewayError):
     """Every eligible provider failed. 502 unless we know better (timeout → 504)."""
 

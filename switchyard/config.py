@@ -96,6 +96,20 @@ class ReliabilityConfig(_Strict):
     circuit_breaker: CircuitBreakerConfig = CircuitBreakerConfig()
 
 
+class RedisConfig(_Strict):
+    url: str = "redis://localhost:6379/0"
+    key_prefix: str = "sy"
+    socket_timeout_s: float = Field(default=0.5, gt=0)
+    max_connections: int = Field(default=256, ge=1)
+
+
+class AuthConfig(_Strict):
+    enabled: bool = True
+    """When false, every request is anonymous and unlimited: for local experiments only."""
+    default_max_tokens: int = Field(default=256, ge=1)
+    """Output tokens assumed for rate limiting when the caller does not send ``max_tokens``."""
+
+
 class LoggingConfig(_Strict):
     level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
 
@@ -103,6 +117,8 @@ class LoggingConfig(_Strict):
 class GatewayConfig(_Strict):
     logging: LoggingConfig = LoggingConfig()
     reliability: ReliabilityConfig = ReliabilityConfig()
+    redis: RedisConfig = RedisConfig()
+    auth: AuthConfig = AuthConfig()
     providers: dict[str, ProviderConfig]
     routes: list[Route] = Field(min_length=1)
 

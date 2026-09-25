@@ -118,7 +118,7 @@ class Harness:
             self.sleeps.append(seconds)
 
         self.service = ChatService(
-            Router(config, dict(self.providers)),  # type: ignore[arg-type]
+            Router(config, dict(self.providers)),
             self.breakers,
             retry=RetryPolicy(max_attempts, 0.1, 1.0, rng=random.Random(0)),
             request_timeout_s=request_timeout_s,

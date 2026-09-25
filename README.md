@@ -6,8 +6,8 @@ fault-injecting mock), streams tokens back over SSE, and fails cleanly when an u
 misbehaves. It is built as a production-style service: structured logs, request tracing, typed
 config, and tests that exercise real sockets and real failure modes.
 
-> **Status:** Phases 1–2 (core proxy, reliability) of 6 are done. Rate limiting, caching,
-> observability and load-test results are in progress. Performance numbers are `TBD` until they
+> **Status:** Phases 1–3 (core proxy, reliability, auth and rate limiting) of 6 are done.
+> Caching, observability and load-test results are in progress. Performance numbers are `TBD` until they
 > are measured and saved in `results/`.
 
 ## Architecture
@@ -16,7 +16,8 @@ config, and tests that exercise real sockets and real failure modes.
 flowchart LR
     C[Client / OpenAI SDK] -->|POST /v1/chat/completions| MW
     subgraph GW[Switchyard gateway]
-        MW[Request ID + JSON access log] --> H[Chat handler]
+        MW[Request ID + JSON access log] --> AU[Auth + rate limit<br/>1 Lua call]
+        AU --> H[Chat handler]
         H --> S[ChatService<br/>retry · backoff · failover]
         S --> R[Router<br/>model alias → ordered targets]
         S --> CB[Circuit breaker<br/>per provider]
@@ -27,7 +28,7 @@ flowchart LR
     A1 --> G[(Groq API)]
     A2 --> O[(Ollama)]
     A3 --> M[(mock-provider)]
-    GW -.-> RD[(Redis)]
+    AU <--> RD[(Redis)]
 ```
 
 ## Quick start
@@ -36,18 +37,22 @@ Requires Docker with Compose v2 and Python 3.11 (for the tests).
 
 ```bash
 git clone <this repo> && cd switchyard
-make up            # builds and starts gateway, 2 mock providers and Redis; waits for health
+make up                      # build + start gateway, 2 mock providers, Redis; waits for health
+make key NAME=me             # prints a new API key (shown once) as JSON
+export KEY=sk-sy-...         # paste the api_key value
 curl -s localhost:8000/v1/chat/completions \
-  -H 'content-type: application/json' \
+  -H "authorization: Bearer $KEY" -H 'content-type: application/json' \
   -d '{"model": "mock", "messages": [{"role": "user", "content": "hello"}]}'
 ```
 
 The same request from the OpenAI Python SDK:
 
 ```python
+import os
+
 from openai import OpenAI
 
-client = OpenAI(base_url="http://localhost:8000/v1", api_key="unused")
+client = OpenAI(base_url="http://localhost:8000/v1", api_key=os.environ["KEY"])
 for chunk in client.chat.completions.create(
     model="mock", messages=[{"role": "user", "content": "hello"}], stream=True
 ):
@@ -60,6 +65,7 @@ and/or run Ollama on the host, then use `"model": "fast"`.
 | Command | What it does |
 |---|---|
 | `make up` / `make down` | Start / stop the stack |
+| `make key NAME=x RPM=60 TPM=100000` | Issue an API key |
 | `make test` | Unit and component tests with coverage |
 | `make test-integration` | Tests against the running compose stack |
 | `make check` | Lint (ruff), type-check (mypy --strict) and tests: what CI runs |
@@ -92,10 +98,24 @@ Longer write-ups are in [`docs/decisions.md`](docs/decisions.md).
 - **Failover.** Targets are tried in priority order. Responses report
   `x-switchyard-attempts` and `x-switchyard-failovers`, and `/status/providers` shows each
   breaker's state.
+- **API keys.** `sk-sy-…` keys with 256 bits of entropy, stored only as SHA-256 hashes (why
+  not bcrypt: ADR-011). Issue, list, disable and re-limit keys with
+  `python -m switchyard.cli keys …`.
+- **Atomic token-bucket rate limiting.** Per key, requests/min *and* tokens/min, both checked
+  together with authentication in one Redis Lua script: one round trip, atomic across
+  processes, all-or-nothing charging, using Redis's clock. Tokens are pre-charged from an
+  estimate and reconciled with real usage afterwards. Rejections are `429` with `Retry-After`
+  and OpenAI-style `x-ratelimit-*` headers. [ADR-012]
+  - *Why a token bucket:* it allows a burst of one minute's allowance, then a smooth rate. It
+    avoids the fixed window's doubled burst at window edges, and stores O(1) state per key
+    unlike a sliding log.
+  - *Proof:* a test fires 400 concurrent admissions from 8 independent connection pools, and
+    another fires 150 parallel HTTP requests; both assert the limit holds **exactly**. A
+    control test shows a naive GET/SET limiter over-admitting under the same load.
 - **Tracing and logs.** Every response carries `x-request-id` (the caller's, if it is sane).
   Logs are one JSON object per line with the request ID attached, including logs written from
   inside streaming generators.
-- **Health.** `/healthz` (liveness), `/readyz` (own dependencies only; see ADR-005), and
+- **Health.** `/healthz` (liveness), `/readyz` (config and Redis only; see ADR-005), and
   `/status/providers` (on-demand upstream probes).
 - **Mock provider.** Simulates time to first token, token pacing, HTTP errors, hangs, dropped
   connections and stalled streams. Every setting can be changed at runtime through
@@ -119,6 +139,10 @@ Longer write-ups are in [`docs/decisions.md`](docs/decisions.md).
 | Client disconnects mid-stream | Upstream request is closed; breaker is not charged |
 | Retries exceed the request budget | `504 request_timeout` at `request_timeout_s` |
 | Unknown model | `404 model_not_found` |
+| Missing, unknown or disabled API key | `401 invalid_api_key` |
+| Key over its requests/min or tokens/min limit | `429 rate_limit_exceeded` + `Retry-After`; nothing charged |
+| Single request larger than the key's tokens/min | `400 tokens_exceed_limit` (it could never succeed) |
+| Redis unreachable | `503 auth_unavailable` (fail closed, ADR-013); `/readyz` → 503 |
 
 ## Limitations
 

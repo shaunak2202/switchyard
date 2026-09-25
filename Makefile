@@ -29,12 +29,20 @@ up: ## Build and start the full stack (gateway, mocks, redis)
 down: ## Stop the stack
 	$(COMPOSE) down
 
+.PHONY: key
+key: ## Create an API key: make key NAME=me [RPM=600] [TPM=1000000]
+	@$(COMPOSE) exec -T gateway python -m switchyard.cli keys create --name "$(or $(NAME),dev)" --rpm $(or $(RPM),600) --tpm $(or $(TPM),1000000)
+
 .PHONY: logs
 logs: ## Tail gateway logs
 	$(COMPOSE) logs -f gateway
 
+.PHONY: redis
+redis: ## Start only Redis (what `make test` needs)
+	$(COMPOSE) up -d --wait redis
+
 .PHONY: test
-test: install ## Unit + component tests with coverage
+test: install redis ## Unit + component tests with coverage (starts Redis if needed)
 	$(BIN)/pytest -m "not integration" --cov --cov-report=term-missing
 
 .PHONY: test-integration

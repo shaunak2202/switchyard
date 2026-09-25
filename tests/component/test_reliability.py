@@ -16,14 +16,24 @@ pytestmark = pytest.mark.usefixtures("mocks")
 
 BODY = {"model": "mock", "messages": [{"role": "user", "content": "hi"}]}
 STREAM_BODY = BODY | {"stream": True}
+Post = Callable[..., httpx.Response]
 
 
-def post(url: str, body: dict[str, Any] = BODY) -> httpx.Response:
-    return httpx.post(f"{url}/v1/chat/completions", json=body, timeout=10)
+@pytest.fixture
+def headers(api_key: str) -> dict[str, str]:
+    return {"authorization": f"Bearer {api_key}"}
+
+
+@pytest.fixture
+def post(headers: dict[str, str]) -> Post:
+    def send(url: str, body: dict[str, Any] = BODY) -> httpx.Response:
+        return httpx.post(f"{url}/v1/chat/completions", json=body, headers=headers, timeout=10)
+
+    return send
 
 
 def test_failover_to_secondary_after_retries(
-    make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
+    post: Post, make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
 ) -> None:
     mock_a, mock_b = mocks
     mock_a.configure(error_rate=1.0, error_status=503)
@@ -38,7 +48,7 @@ def test_failover_to_secondary_after_retries(
 
 
 def test_stream_fails_over_when_primary_hangs(
-    make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
+    post: Post, make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
 ) -> None:
     mock_a, _ = mocks
     mock_a.configure(timeout_rate=1.0)
@@ -52,7 +62,7 @@ def test_stream_fails_over_when_primary_hangs(
     assert 0.3 <= elapsed < 1.0  # one first-byte timeout, then the secondary
 
 
-def test_connection_refused_fails_over(make_gateway: Callable[..., str]) -> None:
+def test_connection_refused_fails_over(post: Post, make_gateway: Callable[..., str]) -> None:
     """A provider that is down entirely (nothing listening) is a fast failover."""
     from mock_provider.app import create_app as create_mock_app
     from switchyard.main import create_app as create_gateway_app
@@ -67,7 +77,7 @@ def test_connection_refused_fails_over(make_gateway: Callable[..., str]) -> None
 
 
 def test_breaker_opens_sheds_load_then_recovers(
-    make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
+    post: Post, make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
 ) -> None:
     mock_a, mock_b = mocks
     mock_a.configure(error_rate=1.0)
@@ -97,7 +107,7 @@ def test_breaker_opens_sheds_load_then_recovers(
 
 
 def test_failed_half_open_probe_reopens(
-    make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
+    post: Post, make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
 ) -> None:
     mock_a, _ = mocks
     mock_a.configure(error_rate=1.0)
@@ -115,7 +125,7 @@ def test_failed_half_open_probe_reopens(
 
 
 def test_all_circuits_open_returns_503(
-    make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
+    post: Post, make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
 ) -> None:
     for mock in mocks:
         mock.configure(error_rate=1.0)
@@ -131,7 +141,7 @@ def test_all_circuits_open_returns_503(
 
 
 def test_mid_stream_abort_is_not_retried_and_does_not_hang(
-    make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
+    post: Post, make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
 ) -> None:
     mock_a, mock_b = mocks
     mock_a.configure(stream_abort_rate=1.0, fail_after_tokens=3)
@@ -147,12 +157,14 @@ def test_mid_stream_abort_is_not_retried_and_does_not_hang(
 
 
 def test_client_disconnect_closes_upstream_stream(
-    make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
+    headers: dict[str, str], make_gateway: Callable[..., str], mocks: tuple[MockServer, MockServer]
 ) -> None:
     mock_a, _ = mocks
     mock_a.configure(inter_token_ms=50, output_tokens=200)
     url = make_gateway()
-    with httpx.stream("POST", f"{url}/v1/chat/completions", json=STREAM_BODY, timeout=10) as r:
+    with httpx.stream(
+        "POST", f"{url}/v1/chat/completions", json=STREAM_BODY, headers=headers, timeout=10
+    ) as r:
         for line in r.iter_lines():
             if '"content"' in line:
                 break  # hang up after the first token

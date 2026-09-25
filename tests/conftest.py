@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import asyncio
+import os
 import socket
 import threading
 import time
+import uuid
 from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass
 from typing import Any
@@ -11,12 +15,20 @@ from typing import Any
 import httpx
 import pytest
 import uvicorn
+from redis import Redis as SyncRedis
+from redis.asyncio import Redis
 from starlette.types import ASGIApp
 
 from mock_provider.app import MockSettings
 from mock_provider.app import create_app as create_mock_app
+from switchyard.auth.keys import KeyStore
 from switchyard.config import GatewayConfig
 from switchyard.main import create_app as create_gateway_app
+
+REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
+# Every test session gets its own key namespace, so tests never touch a developer's real keys
+# and parallel CI jobs sharing one Redis cannot interfere.
+REDIS_PREFIX = f"sy-test-{uuid.uuid4().hex[:8]}"
 
 
 def _free_port() -> int:
@@ -90,11 +102,14 @@ def gateway_config(
     retry: dict[str, float] | None = None,
     breaker: dict[str, float] | None = None,
     request_timeout_s: float = 10,
+    auth_enabled: bool = True,
 ) -> GatewayConfig:
     t = {"connect_s": 1, "first_byte_s": 1, "idle_s": 0.5, "total_s": 2} | (timeouts or {})
     return GatewayConfig.model_validate(
         {
             "logging": {"level": "WARNING"},
+            "redis": {"url": REDIS_URL, "key_prefix": REDIS_PREFIX},
+            "auth": {"enabled": auth_enabled, "default_max_tokens": 64},
             "reliability": {
                 "request_timeout_s": request_timeout_s,
                 "retry": FAST_RETRY | (retry or {}),
@@ -116,6 +131,38 @@ def gateway_config(
             ],
         }
     )
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _redis_namespace() -> Iterator[None]:
+    yield
+    client = SyncRedis.from_url(REDIS_URL)
+    try:
+        keys = list(client.scan_iter(f"{REDIS_PREFIX}:*", count=1000))
+        if keys:
+            client.delete(*keys)
+    except Exception:  # Redis may be down if only unit tests ran
+        pass
+
+
+def create_key(*, rpm: int = 1_000_000, tpm: int = 1_000_000_000, name: str = "test") -> str:
+    async def run() -> str:
+        redis = Redis.from_url(REDIS_URL)
+        try:
+            api_key, _ = await KeyStore(redis, REDIS_PREFIX).create(name, rpm=rpm, tpm=tpm)
+            return api_key
+        finally:
+            await redis.aclose()
+
+    # A worker thread has no running event loop, so this works from sync and async tests alike.
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        return pool.submit(asyncio.run, run()).result()
+
+
+@pytest.fixture(scope="session")
+def api_key() -> str:
+    """A key whose limits are never hit, for tests that are not about rate limiting."""
+    return create_key(name="session")
 
 
 @pytest.fixture(scope="session")
@@ -147,6 +194,7 @@ def mocks(mock_a: MockServer, mock_b: MockServer) -> Iterator[tuple[MockServer, 
 
 
 @pytest.fixture
-async def client(gateway_url: str) -> Any:
-    async with httpx.AsyncClient(base_url=gateway_url, timeout=10) as c:
+async def client(gateway_url: str, api_key: str) -> Any:
+    headers = {"authorization": f"Bearer {api_key}"}
+    async with httpx.AsyncClient(base_url=gateway_url, timeout=10, headers=headers) as c:
         yield c

@@ -4,6 +4,15 @@
 logging:
   level: ${SWITCHYARD_LOG_LEVEL:-INFO}
 
+redis:
+  url: ${REDIS_URL:-redis://redis:6379/0}
+  key_prefix: sy
+
+auth:
+  enabled: true
+  # Output tokens assumed when a request has no max_tokens (pre-charged, then reconciled).
+  default_max_tokens: 256
+
 reliability:
   # End-to-end budget for one request across all retries and failovers (to first byte).
   request_timeout_s: 60

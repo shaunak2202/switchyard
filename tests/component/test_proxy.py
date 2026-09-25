@@ -92,8 +92,8 @@ async def test_streaming_actually_streams(client: httpx.AsyncClient, mocks: Any)
     assert total >= 0.4
 
 
-def test_openai_sdk_compatibility(gateway_url: str) -> None:
-    client = openai.OpenAI(base_url=f"{gateway_url}/v1", api_key="unused", max_retries=0)
+def test_openai_sdk_compatibility(gateway_url: str, api_key: str) -> None:
+    client = openai.OpenAI(base_url=f"{gateway_url}/v1", api_key=api_key, max_retries=0)
     completion = client.chat.completions.create(model="mock", messages=MESSAGES)
     assert completion.choices[0].message.content
 
@@ -171,9 +171,9 @@ async def test_mid_stream_failure_ends_stream_with_error_event(
     assert elapsed < 1.5  # a stall is cut off by idle_s=0.5, not left hanging
 
 
-def test_openai_sdk_raises_on_mid_stream_error(gateway_url: str, mocks: Any) -> None:
+def test_openai_sdk_raises_on_mid_stream_error(gateway_url: str, api_key: str, mocks: Any) -> None:
     mocks[0].configure(stream_abort_rate=1.0, fail_after_tokens=2)
-    client = openai.OpenAI(base_url=f"{gateway_url}/v1", api_key="unused", max_retries=0)
+    client = openai.OpenAI(base_url=f"{gateway_url}/v1", api_key=api_key, max_retries=0)
     stream = client.chat.completions.create(model="only-a", messages=MESSAGES, stream=True)
     with pytest.raises(openai.APIError):
         for _ in stream:
