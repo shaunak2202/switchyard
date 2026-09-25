@@ -246,3 +246,69 @@ wait up to `socket_timeout_s` for a connection.
 **Consequences.** A traffic spike above the pool size adds queueing latency instead of an
 immediate 503. Pool size (`redis.max_connections`) becomes a tuning knob that the load tests
 exercise.
+
+---
+
+## ADR-015: Cache design: exact first, deterministic requests only, one entry shape
+
+**Date:** 2026-09-25 · **Status:** accepted
+
+**Decision.**
+- **Eligibility.** Only `temperature: 0` requests are cached, unless the caller sends
+  `X-Switchyard-Cache: allow`. With temperature > 0 (or unset, the provider default) the
+  caller asked for a *sample*, and replaying one sample to everyone changes the API's meaning.
+- **Exact key.** SHA-256 of the canonical JSON of every output-affecting field. Normalisation
+  only removes differences that cannot change the answer: key order, `\r\n`, surrounding
+  whitespace, a single text part vs a string, stop-sequence order, and `max_completion_tokens`
+  vs `max_tokens`.
+- **Caller control.** `Cache-Control: no-cache` skips the lookup, `no-store` skips the
+  write, and `X-Switchyard-Cache: no-semantic` restricts matching to exact.
+- **One entry shape.** Entries are stored as non-streaming completions. Streaming misses are
+  assembled as they are relayed, and streaming hits are replayed as synthetic chunks, so one
+  entry serves both kinds of caller. Streams with tool calls or several choices are not cached.
+- **Only finished answers are stored.** Errors, aborted streams and content-filtered answers
+  never are. Writes happen in a tracked background task after the response is sent.
+- **Hits** count against requests/min but refund the token estimate: they consume no
+  provider tokens.
+- **Failure is a miss.** A Redis error during lookup or store is logged and treated as a miss.
+  The cache must never be why a request fails.
+
+---
+
+## ADR-016: Semantic matching is two-stage, with thresholds chosen from labelled data
+
+**Date:** 2026-09-25 · **Status:** accepted
+
+**Context.** A semantic hit serves an answer generated for a *different* prompt, so a false hit
+is a wrong answer. The acceptance rule was fixed **before** running the evaluation: *the lowest
+threshold whose false-hit rate is ≤ 1% on every evaluation source.* The sources are 155
+hand-labelled LLM-style prompt pairs (`data/semantic_pairs.jsonl`, heavy on hard negatives),
+2,000 pairs from PAWS (adversarial word-order swaps) and 2,000 from QQP (real user questions).
+
+**Findings** (`results/semantic-threshold/20260925T184805Z/`):
+- **Embedding-only matching (all-MiniLM-L6-v2 cosine) cannot meet the rule at any useful
+  threshold.** The only compliant value is 1.0, which means no hits at all. At 0.95, the
+  threshold that satisfies QQP alone, it still serves a wrong answer for 9.5% of the
+  hand-labelled non-paraphrases and 77.5% of PAWS non-paraphrases. The worst category is
+  direction reversals ("5 km to miles" vs "5 miles to km", similarity 0.993): 7 of 10 get
+  through.
+- **Two-stage matching meets the rule.** The embedding proposes the nearest cached prompt as a
+  candidate (similarity ≥ 0.80), and a cross-encoder (`cross-encoder/quora-distilroberta-base`)
+  must score the pair ≥ 0.992. This keeps the false-hit rate ≤ 1% on all three sources, with
+  **0 false hits on the hand-labelled hard negatives in every category**. The cost is recall:
+  the hit rate on paraphrases is low (8% on the prompt set, 29% on QQP).
+
+**Decision.** Ship the two-stage configuration and enable it by default. A cache that is
+rarely wrong and sometimes helps is worth running; one that is often wrong is not. Embedding-only
+mode still exists (`verifier_model: null`) but logs a warning at startup.
+
+**Consequences.**
+- The verifier adds ~6 ms per semantic *candidate* (p50, measured), and nothing when no
+  candidate exists. The embedding adds ~3 ms to every cache-eligible request that misses the
+  exact cache.
+- The verifier was trained on Quora duplicate questions, so its QQP numbers may be optimistic.
+  The prompt and PAWS sets are not affected, and those are what bind the threshold.
+- Per-pair rates are not live hit rates. In production the chance of a false hit grows with
+  the number of near-neighbours in the cache, so the rule should be re-checked on real traffic.
+- Changing either model invalidates the thresholds. Re-run
+  `scripts/eval_semantic_threshold.py` first.

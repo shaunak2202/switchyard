@@ -189,3 +189,29 @@ def test_kill_primary_container_mid_stream_then_fail_over(auth: dict[str, str]) 
         assert int(resp2.headers["x-switchyard-failovers"]) == 1
     finally:
         _compose("up", "-d", "--wait", "mock-primary")
+
+
+def test_semantic_cache_with_real_models(auth: dict[str, str]) -> None:
+    """The baked-in embedding + verifier models, at the shipped thresholds.
+
+    Each run gets a unique system prompt (part of the cache namespace, not embedded), so the
+    user text stays natural: an appended random tag measurably lowers the verifier's score.
+    """
+    system = f"Test run {time.monotonic_ns()}."
+
+    def ask(text: str) -> httpx.Response:
+        return httpx.post(
+            f"{GATEWAY}/v1/chat/completions",
+            json={"model": "mock", "temperature": 0,
+                  "messages": [{"role": "system", "content": system},
+                               {"role": "user", "content": text}]},
+            headers=auth,
+            timeout=30,
+        )  # fmt: skip
+
+    assert ask("What is the capital of France?").headers["x-switchyard-cache"] == "miss"
+    time.sleep(0.5)
+    hit = ask("what is the capital of france")
+    assert hit.headers["x-switchyard-cache"] == "hit-semantic"
+    assert float(hit.headers["x-switchyard-cache-verifier-score"]) >= 0.992
+    assert ask("What is the capital of Germany?").headers["x-switchyard-cache"] == "miss"

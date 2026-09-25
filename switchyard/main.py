@@ -15,6 +15,13 @@ from switchyard import __version__
 from switchyard.api import chat, health
 from switchyard.api.guard import Guard
 from switchyard.auth.keys import KeyStore
+from switchyard.cache.embeddings import (
+    CrossEncoderVerifier,
+    Embedder,
+    SentenceTransformerEmbedder,
+    Verifier,
+)
+from switchyard.cache.store import ExactCache, ResponseCache, SemanticCache
 from switchyard.config import GatewayConfig, load_config
 from switchyard.errors import GatewayError, InvalidRequestError
 from switchyard.logs import configure_logging
@@ -25,6 +32,7 @@ from switchyard.reliability.backoff import RetryPolicy
 from switchyard.reliability.breaker import BreakerSettings, CircuitBreaker
 from switchyard.router import Router
 from switchyard.service import ChatService
+from switchyard.tasks import BackgroundTasks
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +41,8 @@ def create_app(
     config: GatewayConfig | None = None,
     *,
     transport_factory: TransportFactory | None = None,
+    embedder: Embedder | None = None,
+    verifier: Verifier | None = None,
 ) -> FastAPI:
     config = config or load_config()
     configure_logging(config.logging.level)
@@ -61,6 +71,8 @@ def create_app(
         )
         if not config.auth.enabled:
             logger.warning("auth is DISABLED: every request is anonymous and unlimited")
+        app.state.tasks = BackgroundTasks()
+        app.state.cache = await _build_cache(config, redis, embedder, verifier)
         providers = build_providers(config, transport_factory)
         router = Router(config, providers)
         rel = config.reliability
@@ -82,6 +94,7 @@ def create_app(
         try:
             yield
         finally:
+            await app.state.tasks.drain()
             for provider in providers.values():
                 await provider.aclose()
             await redis.aclose()
@@ -92,6 +105,55 @@ def create_app(
     app.include_router(health.router)
     _install_error_handlers(app)
     return app
+
+
+async def _build_cache(
+    config: GatewayConfig,
+    redis: Redis,
+    embedder: Embedder | None,
+    verifier: Verifier | None,
+) -> ResponseCache:
+    cfg = config.cache
+    prefix = config.redis.key_prefix
+    exact = ExactCache(redis, prefix, cfg.exact.ttl_s) if cfg.exact.enabled else None
+    semantic = None
+    if cfg.semantic.enabled:
+        try:
+            if embedder is None:
+                embedder = await SentenceTransformerEmbedder.load(cfg.semantic.embedding_model)
+            if verifier is None and cfg.semantic.verifier_model is not None:
+                verifier = await CrossEncoderVerifier.load(cfg.semantic.verifier_model)
+            if verifier is None:
+                logger.warning(
+                    "semantic cache running WITHOUT a verifier: see ADR-016 for the measured "
+                    "false-hit rate of embedding-only matching"
+                )
+            semantic = SemanticCache(
+                redis,
+                prefix,
+                embedder,
+                candidate_threshold=cfg.semantic.candidate_threshold,
+                verifier=verifier,
+                verifier_threshold=cfg.semantic.verifier_threshold,
+                ttl_s=cfg.semantic.ttl_s,
+            )
+            await semantic.ensure_index()
+        except Exception:
+            # Missing optional deps, no model, or a Redis without the query engine: run
+            # without the semantic tier instead of refusing to start.
+            logger.exception("semantic cache disabled: failed to initialise")
+            semantic = None
+    logger.info(
+        "cache configured",
+        extra={
+            "exact": exact is not None,
+            "semantic": semantic is not None,
+            "candidate_threshold": cfg.semantic.candidate_threshold if semantic else None,
+            "verifier": semantic.verifier.name if semantic and semantic.verifier else None,
+            "verifier_threshold": cfg.semantic.verifier_threshold if semantic else None,
+        },
+    )
+    return ResponseCache(exact, semantic, max_semantic_chars=cfg.semantic.max_prompt_chars)
 
 
 def _install_error_handlers(app: FastAPI) -> None:

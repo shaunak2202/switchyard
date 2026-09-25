@@ -1,0 +1,269 @@
+{
+  "rule": "lowest threshold with false_hit_rate <= 0.01 on every source in the profile",
+  "embedding": {
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "profiles": {
+      "strict": {
+        "sources": [
+          "prompts",
+          "paws",
+          "qqp"
+        ],
+        "chosen_threshold": 1.0,
+        "at_chosen": {
+          "prompts": {
+            "source": "prompts",
+            "threshold": 1.0,
+            "hit_rate": 0.0,
+            "false_hit_rate": 0.0,
+            "precision": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 60,
+            "tn": 95
+          },
+          "paws": {
+            "source": "paws",
+            "threshold": 1.0,
+            "hit_rate": 0.001,
+            "false_hit_rate": 0.0,
+            "precision": 1.0,
+            "tp": 1,
+            "fp": 0,
+            "fn": 999,
+            "tn": 1000
+          },
+          "qqp": {
+            "source": "qqp",
+            "threshold": 1.0,
+            "hit_rate": 0.001,
+            "false_hit_rate": 0.0,
+            "precision": 1.0,
+            "tp": 1,
+            "fp": 0,
+            "fn": 999,
+            "tn": 1000
+          }
+        }
+      },
+      "faq": {
+        "sources": [
+          "qqp"
+        ],
+        "chosen_threshold": 0.95,
+        "at_chosen": {
+          "prompts": {
+            "source": "prompts",
+            "threshold": 0.95,
+            "hit_rate": 0.23333333333333334,
+            "false_hit_rate": 0.09473684210526316,
+            "precision": 0.6086956521739131,
+            "tp": 14,
+            "fp": 9,
+            "fn": 46,
+            "tn": 86
+          },
+          "paws": {
+            "source": "paws",
+            "threshold": 0.95,
+            "hit_rate": 0.891,
+            "false_hit_rate": 0.775,
+            "precision": 0.5348139255702281,
+            "tp": 891,
+            "fp": 775,
+            "fn": 109,
+            "tn": 225
+          },
+          "qqp": {
+            "source": "qqp",
+            "threshold": 0.95,
+            "hit_rate": 0.191,
+            "false_hit_rate": 0.009,
+            "precision": 0.955,
+            "tp": 191,
+            "fp": 9,
+            "fn": 809,
+            "tn": 991
+          }
+        }
+      }
+    }
+  },
+  "two_stage": {
+    "cross-encoder/quora-distilroberta-base": {
+      "candidate_threshold": 0.8,
+      "profiles": {
+        "strict": {
+          "sources": [
+            "prompts",
+            "paws",
+            "qqp"
+          ],
+          "chosen_threshold": 0.992,
+          "at_chosen": {
+            "prompts": {
+              "source": "prompts",
+              "threshold": 0.992,
+              "hit_rate": 0.08333333333333333,
+              "false_hit_rate": 0.0,
+              "precision": 1.0,
+              "tp": 5,
+              "fp": 0,
+              "fn": 55,
+              "tn": 95
+            },
+            "paws": {
+              "source": "paws",
+              "threshold": 0.992,
+              "hit_rate": 0.026,
+              "false_hit_rate": 0.006,
+              "precision": 0.8125,
+              "tp": 26,
+              "fp": 6,
+              "fn": 974,
+              "tn": 994
+            },
+            "qqp": {
+              "source": "qqp",
+              "threshold": 0.992,
+              "hit_rate": 0.288,
+              "false_hit_rate": 0.001,
+              "precision": 0.9965397923875432,
+              "tp": 288,
+              "fp": 1,
+              "fn": 712,
+              "tn": 999
+            }
+          }
+        },
+        "faq": {
+          "sources": [
+            "qqp"
+          ],
+          "chosen_threshold": 0.96,
+          "at_chosen": {
+            "prompts": {
+              "source": "prompts",
+              "threshold": 0.96,
+              "hit_rate": 0.43333333333333335,
+              "false_hit_rate": 0.05263157894736842,
+              "precision": 0.8387096774193549,
+              "tp": 26,
+              "fp": 5,
+              "fn": 34,
+              "tn": 90
+            },
+            "paws": {
+              "source": "paws",
+              "threshold": 0.96,
+              "hit_rate": 0.691,
+              "false_hit_rate": 0.595,
+              "precision": 0.5373250388802489,
+              "tp": 691,
+              "fp": 595,
+              "fn": 309,
+              "tn": 405
+            },
+            "qqp": {
+              "source": "qqp",
+              "threshold": 0.96,
+              "hit_rate": 0.541,
+              "false_hit_rate": 0.01,
+              "precision": 0.9818511796733213,
+              "tp": 541,
+              "fp": 10,
+              "fn": 459,
+              "tn": 990
+            }
+          }
+        }
+      },
+      "single_pair_latency_ms": {
+        "p50": 6.257,
+        "p95": 10.311
+      }
+    }
+  },
+  "hand_labelled_false_hits_by_category": {
+    "embedding>=0.95": {
+      "entity_swap": {
+        "negatives": 20,
+        "false_hits": 0
+      },
+      "number_change": {
+        "negatives": 10,
+        "false_hits": 0
+      },
+      "direction": {
+        "negatives": 10,
+        "false_hits": 7
+      },
+      "negation": {
+        "negatives": 10,
+        "false_hits": 1
+      },
+      "language_swap": {
+        "negatives": 12,
+        "false_hits": 0
+      },
+      "format_change": {
+        "negatives": 10,
+        "false_hits": 1
+      },
+      "same_topic": {
+        "negatives": 15,
+        "false_hits": 0
+      },
+      "unrelated": {
+        "negatives": 8,
+        "false_hits": 0
+      }
+    },
+    "cross-encoder/quora-distilroberta-base: embedding>=0.8 and verifier>=0.992": {
+      "entity_swap": {
+        "negatives": 20,
+        "false_hits": 0
+      },
+      "number_change": {
+        "negatives": 10,
+        "false_hits": 0
+      },
+      "direction": {
+        "negatives": 10,
+        "false_hits": 0
+      },
+      "negation": {
+        "negatives": 10,
+        "false_hits": 0
+      },
+      "language_swap": {
+        "negatives": 12,
+        "false_hits": 0
+      },
+      "format_change": {
+        "negatives": 10,
+        "false_hits": 0
+      },
+      "same_topic": {
+        "negatives": 15,
+        "false_hits": 0
+      },
+      "unrelated": {
+        "negatives": 8,
+        "false_hits": 0
+      }
+    }
+  },
+  "embedding_latency_single_prompt": {
+    "n": 300,
+    "p50_ms": 2.693,
+    "p95_ms": 3.204,
+    "p99_ms": 3.342,
+    "mean_ms": 2.776
+  },
+  "embedding_batch": {
+    "texts": 7300,
+    "seconds": 4.501,
+    "texts_per_second": 1621.9
+  }
+}

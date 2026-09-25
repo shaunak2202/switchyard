@@ -18,9 +18,15 @@ dependencies = [
     "pyyaml>=6.0",
     "redis>=5.2",
     "prometheus-client>=0.21",
+    "numpy>=1.26",
 ]
 
 [project.optional-dependencies]
+# Local embedding model for the semantic cache. Kept optional because torch is large; without
+# it the gateway runs with the exact-match cache only.
+semantic = ["sentence-transformers>=3.3"]
+# Offline evaluation of the semantic-cache threshold (scripts/eval_semantic_threshold.py).
+eval = ["sentence-transformers>=3.3", "datasets>=3.1"]
 dev = [
     "pytest>=8.3",
     "pytest-asyncio>=0.24",

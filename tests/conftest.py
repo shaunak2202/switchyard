@@ -103,6 +103,7 @@ def gateway_config(
     breaker: dict[str, float] | None = None,
     request_timeout_s: float = 10,
     auth_enabled: bool = True,
+    cache: dict[str, Any] | None = None,
 ) -> GatewayConfig:
     t = {"connect_s": 1, "first_byte_s": 1, "idle_s": 0.5, "total_s": 2} | (timeouts or {})
     return GatewayConfig.model_validate(
@@ -110,6 +111,7 @@ def gateway_config(
             "logging": {"level": "WARNING"},
             "redis": {"url": REDIS_URL, "key_prefix": REDIS_PREFIX},
             "auth": {"enabled": auth_enabled, "default_max_tokens": 64},
+            "cache": cache or {"exact": {"enabled": False}},
             "reliability": {
                 "request_timeout_s": request_timeout_s,
                 "retry": FAST_RETRY | (retry or {}),
@@ -177,8 +179,9 @@ def make_gateway(mock_a: MockServer, mock_b: MockServer) -> Iterator[Any]:
     """Start a dedicated gateway (fresh breakers) with custom reliability settings."""
     with ExitStack() as stack:
 
-        def start(**kwargs: Any) -> str:
-            app = create_gateway_app(gateway_config(mock_a.url, mock_b.url, **kwargs))
+        def start(embedder: Any = None, verifier: Any = None, **kwargs: Any) -> str:
+            config = gateway_config(mock_a.url, mock_b.url, **kwargs)
+            app = create_gateway_app(config, embedder=embedder, verifier=verifier)
             return stack.enter_context(run_server(app))
 
         yield start

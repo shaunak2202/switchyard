@@ -63,5 +63,13 @@ fmt: install ## Auto-format
 typecheck: install ## mypy --strict
 	$(BIN)/mypy
 
+.PHONY: readme
+readme: ## Regenerate README tables from results/
+	$(BIN)/python scripts/render_readme.py
+
+.PHONY: eval-semantic
+eval-semantic: ## Re-run the semantic-cache threshold evaluation (needs .[eval])
+	$(BIN)/python scripts/eval_semantic_threshold.py --verifier cross-encoder/quora-distilroberta-base
+
 .PHONY: check
 check: lint typecheck test ## Everything CI runs

@@ -1,0 +1,155 @@
+{"a": "What is the capital of France?", "b": "Which city is France's capital?", "label": 1, "category": "paraphrase"}
+{"a": "How do I reverse a list in Python?", "b": "What's the way to reverse a Python list?", "label": 1, "category": "paraphrase"}
+{"a": "Explain what a hash table is.", "b": "Can you explain hash tables?", "label": 1, "category": "paraphrase"}
+{"a": "What is the boiling point of water at sea level?", "b": "At sea level, what temperature does water boil at?", "label": 1, "category": "paraphrase"}
+{"a": "Who wrote Pride and Prejudice?", "b": "Who is the author of Pride and Prejudice?", "label": 1, "category": "paraphrase"}
+{"a": "How many continents are there?", "b": "What is the number of continents on Earth?", "label": 1, "category": "paraphrase"}
+{"a": "What does HTTP stand for?", "b": "What is HTTP short for?", "label": 1, "category": "paraphrase"}
+{"a": "Translate 'good morning' into Spanish.", "b": "How do you say 'good morning' in Spanish?", "label": 1, "category": "paraphrase"}
+{"a": "What is the difference between TCP and UDP?", "b": "How does TCP differ from UDP?", "label": 1, "category": "paraphrase"}
+{"a": "Give me a recipe for pancakes.", "b": "Can you share a pancake recipe?", "label": 1, "category": "paraphrase"}
+{"a": "What causes the seasons on Earth?", "b": "Why does Earth have seasons?", "label": 1, "category": "paraphrase"}
+{"a": "How do I undo the last git commit?", "b": "How can I revert my most recent git commit?", "label": 1, "category": "paraphrase"}
+{"a": "What is photosynthesis?", "b": "Explain photosynthesis.", "label": 1, "category": "paraphrase"}
+{"a": "How far is the Moon from Earth?", "b": "What is the distance between the Earth and the Moon?", "label": 1, "category": "paraphrase"}
+{"a": "What is the time complexity of binary search?", "b": "What's binary search's time complexity?", "label": 1, "category": "paraphrase"}
+{"a": "Summarize the plot of Hamlet.", "b": "Give me a summary of Hamlet's plot.", "label": 1, "category": "paraphrase"}
+{"a": "What is the largest planet in our solar system?", "b": "Which planet in the solar system is the biggest?", "label": 1, "category": "paraphrase"}
+{"a": "How do I center a div in CSS?", "b": "What's the way to center a div using CSS?", "label": 1, "category": "paraphrase"}
+{"a": "What is a closure in JavaScript?", "b": "Explain closures in JavaScript.", "label": 1, "category": "paraphrase"}
+{"a": "Why is the sky blue?", "b": "What makes the sky appear blue?", "label": 1, "category": "paraphrase"}
+{"a": "What year did World War II end?", "b": "When did the Second World War end?", "label": 1, "category": "paraphrase"}
+{"a": "What is the speed of light?", "b": "How fast does light travel?", "label": 1, "category": "paraphrase"}
+{"a": "How do vaccines work?", "b": "Explain how vaccines work.", "label": 1, "category": "paraphrase"}
+{"a": "What is the Pythagorean theorem?", "b": "State the Pythagorean theorem.", "label": 1, "category": "paraphrase"}
+{"a": "How do I install numpy?", "b": "What's the command to install numpy?", "label": 1, "category": "paraphrase"}
+{"a": "What is the chemical symbol for gold?", "b": "Which chemical symbol represents gold?", "label": 1, "category": "paraphrase"}
+{"a": "What are the benefits of regular exercise?", "b": "Why is exercising regularly good for you?", "label": 1, "category": "paraphrase"}
+{"a": "How does a neural network learn?", "b": "Explain how neural networks learn.", "label": 1, "category": "paraphrase"}
+{"a": "What is the population of Japan?", "b": "How many people live in Japan?", "label": 1, "category": "paraphrase"}
+{"a": "What's the tallest mountain in the world?", "b": "Which mountain is the highest on Earth?", "label": 1, "category": "paraphrase"}
+{"a": "Define machine learning.", "b": "What is machine learning?", "label": 1, "category": "paraphrase"}
+{"a": "How do I make a GET request with curl?", "b": "Using curl, how do I send a GET request?", "label": 1, "category": "paraphrase"}
+{"a": "What is the main function of the heart?", "b": "What does the heart do?", "label": 1, "category": "paraphrase"}
+{"a": "Who painted the Mona Lisa?", "b": "Which artist painted the Mona Lisa?", "label": 1, "category": "paraphrase"}
+{"a": "What is inflation in economics?", "b": "Explain inflation in economic terms.", "label": 1, "category": "paraphrase"}
+{"a": "How do I read a CSV file in pandas?", "b": "What's the way to load a CSV with pandas?", "label": 1, "category": "paraphrase"}
+{"a": "What is the freezing point of water in Fahrenheit?", "b": "At what Fahrenheit temperature does water freeze?", "label": 1, "category": "paraphrase"}
+{"a": "What is a REST API?", "b": "Can you explain what a REST API is?", "label": 1, "category": "paraphrase"}
+{"a": "What's the square root of 144?", "b": "What is the square root of 144?", "label": 1, "category": "paraphrase"}
+{"a": "How long does it take light from the Sun to reach Earth?", "b": "How many minutes does sunlight take to get to Earth?", "label": 1, "category": "paraphrase"}
+{"a": "List the primary colors.", "b": "What are the primary colors?", "label": 1, "category": "paraphrase"}
+{"a": "What is Docker used for?", "b": "What do people use Docker for?", "label": 1, "category": "paraphrase"}
+{"a": "How do I check my Python version?", "b": "How can I see which version of Python I have?", "label": 1, "category": "paraphrase"}
+{"a": "What is the meaning of 'ubiquitous'?", "b": "Define the word ubiquitous.", "label": 1, "category": "paraphrase"}
+{"a": "What is the GDP of Germany?", "b": "How large is Germany's GDP?", "label": 1, "category": "paraphrase"}
+{"a": "What are the symptoms of dehydration?", "b": "What signs indicate someone is dehydrated?", "label": 1, "category": "paraphrase"}
+{"a": "Explain recursion with an example.", "b": "Can you explain recursion and give an example?", "label": 1, "category": "paraphrase"}
+{"a": "What's the difference between a list and a tuple in Python?", "b": "How do Python lists and tuples differ?", "label": 1, "category": "paraphrase"}
+{"a": "Who was the first person to walk on the Moon?", "b": "Who first walked on the Moon?", "label": 1, "category": "paraphrase"}
+{"a": "What is the capital of Australia?", "b": "Australia's capital city is what?", "label": 1, "category": "paraphrase"}
+{"a": "How many bones are in the adult human body?", "b": "How many bones does an adult human have?", "label": 1, "category": "paraphrase"}
+{"a": "What does a load balancer do?", "b": "Explain the purpose of a load balancer.", "label": 1, "category": "paraphrase"}
+{"a": "How do I merge two dictionaries in Python?", "b": "What's the best way to combine two dicts in Python?", "label": 1, "category": "paraphrase"}
+{"a": "What is the half-life of carbon-14?", "b": "How long is carbon-14's half-life?", "label": 1, "category": "paraphrase"}
+{"a": "What is Big O notation?", "b": "Explain Big O notation.", "label": 1, "category": "paraphrase"}
+{"a": "Name the planets in order from the Sun.", "b": "List the planets of the solar system in order from the Sun.", "label": 1, "category": "paraphrase"}
+{"a": "What is the capital of Canada?", "b": "which city is the capital of canada", "label": 1, "category": "paraphrase"}
+{"a": "how do i exit vim", "b": "How do I quit Vim?", "label": 1, "category": "paraphrase"}
+{"a": "What is 15% of 200?", "b": "Calculate 15 percent of 200.", "label": 1, "category": "paraphrase"}
+{"a": "What are the three states of matter?", "b": "Name the three states of matter.", "label": 1, "category": "paraphrase"}
+{"a": "What is the capital of France?", "b": "What is the capital of Germany?", "label": 0, "category": "entity_swap"}
+{"a": "Who wrote Pride and Prejudice?", "b": "Who wrote Sense and Sensibility?", "label": 0, "category": "entity_swap"}
+{"a": "What is the population of Japan?", "b": "What is the population of China?", "label": 0, "category": "entity_swap"}
+{"a": "What is the chemical symbol for gold?", "b": "What is the chemical symbol for silver?", "label": 0, "category": "entity_swap"}
+{"a": "Who painted the Mona Lisa?", "b": "Who painted The Starry Night?", "label": 0, "category": "entity_swap"}
+{"a": "What is the GDP of Germany?", "b": "What is the GDP of France?", "label": 0, "category": "entity_swap"}
+{"a": "Summarize the plot of Hamlet.", "b": "Summarize the plot of Macbeth.", "label": 0, "category": "entity_swap"}
+{"a": "What is the capital of Australia?", "b": "What is the capital of Austria?", "label": 0, "category": "entity_swap"}
+{"a": "How far is the Moon from Earth?", "b": "How far is Mars from Earth?", "label": 0, "category": "entity_swap"}
+{"a": "What is the largest planet in our solar system?", "b": "What is the smallest planet in our solar system?", "label": 0, "category": "entity_swap"}
+{"a": "What year did World War II end?", "b": "What year did World War I end?", "label": 0, "category": "entity_swap"}
+{"a": "Who was the first person to walk on the Moon?", "b": "Who was the second person to walk on the Moon?", "label": 0, "category": "entity_swap"}
+{"a": "What is the half-life of carbon-14?", "b": "What is the half-life of uranium-238?", "label": 0, "category": "entity_swap"}
+{"a": "What is the capital of Canada?", "b": "What is the largest city in Canada?", "label": 0, "category": "entity_swap"}
+{"a": "What are the symptoms of dehydration?", "b": "What are the symptoms of diabetes?", "label": 0, "category": "entity_swap"}
+{"a": "Translate 'good morning' into Spanish.", "b": "Translate 'good morning' into French.", "label": 0, "category": "entity_swap"}
+{"a": "Translate 'good morning' into Spanish.", "b": "Translate 'good night' into Spanish.", "label": 0, "category": "entity_swap"}
+{"a": "What is the boiling point of water at sea level?", "b": "What is the boiling point of ethanol at sea level?", "label": 0, "category": "entity_swap"}
+{"a": "Give me a recipe for pancakes.", "b": "Give me a recipe for waffles.", "label": 0, "category": "entity_swap"}
+{"a": "What is the meaning of 'ubiquitous'?", "b": "What is the meaning of 'ambiguous'?", "label": 0, "category": "entity_swap"}
+{"a": "What is 15% of 200?", "b": "What is 15% of 300?", "label": 0, "category": "number_change"}
+{"a": "What's the square root of 144?", "b": "What's the square root of 169?", "label": 0, "category": "number_change"}
+{"a": "Convert 5 kilometers to miles.", "b": "Convert 50 kilometers to miles.", "label": 0, "category": "number_change"}
+{"a": "Write a haiku with 3 lines.", "b": "Write a poem with 14 lines.", "label": 0, "category": "number_change"}
+{"a": "Give me 3 tips for better sleep.", "b": "Give me 10 tips for better sleep.", "label": 0, "category": "number_change"}
+{"a": "What was the population of the US in 1990?", "b": "What was the population of the US in 2020?", "label": 0, "category": "number_change"}
+{"a": "Is 91 a prime number?", "b": "Is 97 a prime number?", "label": 0, "category": "number_change"}
+{"a": "What is 2 to the power of 10?", "b": "What is 2 to the power of 16?", "label": 0, "category": "number_change"}
+{"a": "Summarize this in 50 words.", "b": "Summarize this in 200 words.", "label": 0, "category": "number_change"}
+{"a": "What happened in 1969?", "b": "What happened in 1989?", "label": 0, "category": "number_change"}
+{"a": "Convert 5 kilometers to miles.", "b": "Convert 5 miles to kilometers.", "label": 0, "category": "direction"}
+{"a": "Translate this sentence from English to German.", "b": "Translate this sentence from German to English.", "label": 0, "category": "direction"}
+{"a": "Convert 100 Celsius to Fahrenheit.", "b": "Convert 100 Fahrenheit to Celsius.", "label": 0, "category": "direction"}
+{"a": "How do I convert a string to an integer in Python?", "b": "How do I convert an integer to a string in Python?", "label": 0, "category": "direction"}
+{"a": "Is a whale bigger than an elephant?", "b": "Is an elephant bigger than a whale?", "label": 0, "category": "direction"}
+{"a": "Who did Alexander Hamilton duel?", "b": "Who killed Aaron Burr in a duel?", "label": 0, "category": "direction"}
+{"a": "What are the advantages of SQL over NoSQL?", "b": "What are the advantages of NoSQL over SQL?", "label": 0, "category": "direction"}
+{"a": "How do I upload a file to S3?", "b": "How do I download a file from S3?", "label": 0, "category": "direction"}
+{"a": "How do I encrypt a file with GPG?", "b": "How do I decrypt a file with GPG?", "label": 0, "category": "direction"}
+{"a": "How do I convert JSON to YAML?", "b": "How do I convert YAML to JSON?", "label": 0, "category": "direction"}
+{"a": "What foods should I eat to lower cholesterol?", "b": "What foods should I avoid to lower cholesterol?", "label": 0, "category": "negation"}
+{"a": "Why is coffee good for you?", "b": "Why is coffee bad for you?", "label": 0, "category": "negation"}
+{"a": "What are the pros of remote work?", "b": "What are the cons of remote work?", "label": 0, "category": "negation"}
+{"a": "Which animals are mammals?", "b": "Which animals are not mammals?", "label": 0, "category": "negation"}
+{"a": "When should I use recursion?", "b": "When should I avoid recursion?", "label": 0, "category": "negation"}
+{"a": "List fruits that are high in sugar.", "b": "List fruits that are low in sugar.", "label": 0, "category": "negation"}
+{"a": "What makes a good leader?", "b": "What makes a bad leader?", "label": 0, "category": "negation"}
+{"a": "How do I increase my credit score?", "b": "What lowers your credit score?", "label": 0, "category": "negation"}
+{"a": "Is it safe to eat raw eggs?", "b": "Why is it unsafe to eat raw eggs?", "label": 0, "category": "negation"}
+{"a": "What are the strengths of Python?", "b": "What are the weaknesses of Python?", "label": 0, "category": "negation"}
+{"a": "How do I reverse a list in Python?", "b": "How do I reverse an array in JavaScript?", "label": 0, "category": "language_swap"}
+{"a": "How do I read a file in Python?", "b": "How do I read a file in Go?", "label": 0, "category": "language_swap"}
+{"a": "What is a closure in JavaScript?", "b": "What is a closure in Rust?", "label": 0, "category": "language_swap"}
+{"a": "How do I install numpy?", "b": "How do I install pandas?", "label": 0, "category": "language_swap"}
+{"a": "How do I undo the last git commit?", "b": "How do I undo the last git push?", "label": 0, "category": "language_swap"}
+{"a": "How do I center a div in CSS?", "b": "How do I center a div in Tailwind?", "label": 0, "category": "language_swap"}
+{"a": "How do I read a CSV file in pandas?", "b": "How do I write a CSV file in pandas?", "label": 0, "category": "language_swap"}
+{"a": "How do I make a GET request with curl?", "b": "How do I make a POST request with curl?", "label": 0, "category": "language_swap"}
+{"a": "How do I sort a dictionary by value in Python?", "b": "How do I sort a dictionary by key in Python?", "label": 0, "category": "language_swap"}
+{"a": "How do I create a virtual environment with venv?", "b": "How do I create a virtual environment with conda?", "label": 0, "category": "language_swap"}
+{"a": "How do I list running containers in Docker?", "b": "How do I list all images in Docker?", "label": 0, "category": "language_swap"}
+{"a": "How do I merge two dictionaries in Python?", "b": "How do I merge two branches in git?", "label": 0, "category": "language_swap"}
+{"a": "Explain recursion with an example.", "b": "Explain recursion without using any code.", "label": 0, "category": "format_change"}
+{"a": "Summarize the plot of Hamlet.", "b": "Summarize the plot of Hamlet in one sentence.", "label": 0, "category": "format_change"}
+{"a": "List the primary colors.", "b": "List the primary colors in French.", "label": 0, "category": "format_change"}
+{"a": "Write a poem about the ocean.", "b": "Write a limerick about the ocean.", "label": 0, "category": "format_change"}
+{"a": "Explain quantum computing.", "b": "Explain quantum computing to a five-year-old.", "label": 0, "category": "format_change"}
+{"a": "Give me a recipe for pancakes.", "b": "Give me a vegan recipe for pancakes.", "label": 0, "category": "format_change"}
+{"a": "Describe the water cycle.", "b": "Describe the water cycle as a table.", "label": 0, "category": "format_change"}
+{"a": "Write a cover letter for a software engineer job.", "b": "Write a cover letter for a data scientist job.", "label": 0, "category": "format_change"}
+{"a": "Tell me a joke.", "b": "Tell me a joke about programmers.", "label": 0, "category": "format_change"}
+{"a": "Explain the French Revolution.", "b": "Explain the causes of the French Revolution.", "label": 0, "category": "format_change"}
+{"a": "What is photosynthesis?", "b": "Where does photosynthesis take place in a plant?", "label": 0, "category": "same_topic"}
+{"a": "What is the speed of light?", "b": "Can anything travel faster than light?", "label": 0, "category": "same_topic"}
+{"a": "How do vaccines work?", "b": "Are vaccines safe for pregnant women?", "label": 0, "category": "same_topic"}
+{"a": "What is Docker used for?", "b": "What is the difference between Docker and a virtual machine?", "label": 0, "category": "same_topic"}
+{"a": "What is a REST API?", "b": "What is the difference between REST and GraphQL?", "label": 0, "category": "same_topic"}
+{"a": "What causes the seasons on Earth?", "b": "Why is it hotter at the equator?", "label": 0, "category": "same_topic"}
+{"a": "What is inflation in economics?", "b": "How does the Federal Reserve control inflation?", "label": 0, "category": "same_topic"}
+{"a": "What is the Pythagorean theorem?", "b": "Who discovered the Pythagorean theorem?", "label": 0, "category": "same_topic"}
+{"a": "What is Big O notation?", "b": "What is the Big O of quicksort?", "label": 0, "category": "same_topic"}
+{"a": "How does a neural network learn?", "b": "What is overfitting in neural networks?", "label": 0, "category": "same_topic"}
+{"a": "What are the benefits of regular exercise?", "b": "How much exercise do I need per week?", "label": 0, "category": "same_topic"}
+{"a": "What does a load balancer do?", "b": "What is the difference between L4 and L7 load balancing?", "label": 0, "category": "same_topic"}
+{"a": "What is the difference between TCP and UDP?", "b": "How does the TCP three-way handshake work?", "label": 0, "category": "same_topic"}
+{"a": "Why is the sky blue?", "b": "Why are sunsets red?", "label": 0, "category": "same_topic"}
+{"a": "What is machine learning?", "b": "What is deep learning?", "label": 0, "category": "same_topic"}
+{"a": "What is the capital of France?", "b": "How do I reverse a list in Python?", "label": 0, "category": "unrelated"}
+{"a": "Tell me a joke.", "b": "What is the GDP of Germany?", "label": 0, "category": "unrelated"}
+{"a": "Explain hash tables.", "b": "Give me a recipe for pancakes.", "label": 0, "category": "unrelated"}
+{"a": "Who painted the Mona Lisa?", "b": "How do I install numpy?", "label": 0, "category": "unrelated"}
+{"a": "What causes the seasons on Earth?", "b": "How do I center a div in CSS?", "label": 0, "category": "unrelated"}
+{"a": "Why is the sky blue?", "b": "What does HTTP stand for?", "label": 0, "category": "unrelated"}
+{"a": "What is the speed of light?", "b": "Write a cover letter for a software engineer job.", "label": 0, "category": "unrelated"}
+{"a": "How many continents are there?", "b": "What is a closure in JavaScript?", "label": 0, "category": "unrelated"}

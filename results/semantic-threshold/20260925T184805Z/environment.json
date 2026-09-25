@@ -1,0 +1,39 @@
+{
+  "generated_at": "20260925T184805Z",
+  "command": "scripts/eval_semantic_threshold.py --verifier cross-encoder/quora-distilroberta-base",
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "seed": 20260925,
+  "sample_per_public_source": 2000,
+  "datasets": {
+    "paws": {
+      "dataset": "google-research-datasets/paws",
+      "config": "labeled_final",
+      "split": "test",
+      "fingerprint": "7dc906a3696b55a9",
+      "rows_in_split": 8000,
+      "sampled": 2000
+    },
+    "qqp": {
+      "dataset": "nyu-mll/glue",
+      "config": "qqp",
+      "split": "validation",
+      "fingerprint": "fc1c299086722132",
+      "rows_in_split": 40430,
+      "sampled": 2000
+    }
+  },
+  "versions": {
+    "sentence_transformers": "6.1.0",
+    "torch": "2.14.0",
+    "numpy": "2.4.6"
+  },
+  "torch_threads": 5,
+  "hardware": {
+    "platform": "macOS-26.4-arm64-arm-64bit",
+    "machine": "arm64",
+    "python": "3.11.15",
+    "cpu": "Apple M5 Pro",
+    "cores": "15",
+    "memory_gb": 24.0
+  }
+}

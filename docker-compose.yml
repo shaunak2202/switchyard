@@ -8,8 +8,8 @@ x-healthcheck: &http-healthcheck
 
 services:
   gateway:
-    build: .
-    image: switchyard:dev
+    build: { context: ., target: gateway }
+    image: switchyard-gateway:dev
     env_file:
       - path: .env
         required: false
@@ -25,12 +25,12 @@ services:
       redis: { condition: service_healthy }
     healthcheck:
       <<: *http-healthcheck
+      start_period: 30s  # loading the embedding and verifier models
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz')"]
 
   mock-primary: &mock
-    image: switchyard:dev
-    build: .
-    command: ["uvicorn", "mock_provider.app:create_app", "--factory", "--host", "0.0.0.0", "--port", "9000", "--no-access-log", "--log-level", "warning", "--loop", "uvloop", "--http", "httptools"]
+    build: { context: ., target: mock }
+    image: switchyard-mock:dev
     environment:
       MOCK_TTFT_MS: ${MOCK_TTFT_MS:-50}
       MOCK_INTER_TOKEN_MS: ${MOCK_INTER_TOKEN_MS:-5}
@@ -47,7 +47,7 @@ services:
       - "9002:9000"
 
   redis:
-    image: redis:7.4-alpine
+    image: redis:8.2-alpine
     command: ["redis-server", "--save", "", "--appendonly", "no"]
     ports:
       - "6379:6379"

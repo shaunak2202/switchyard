@@ -13,6 +13,21 @@ auth:
   # Output tokens assumed when a request has no max_tokens (pre-charged, then reconciled).
   default_max_tokens: 256
 
+cache:
+  exact:
+    enabled: true
+    ttl_s: 3600
+  semantic:
+    enabled: true
+    # Two-stage matching; thresholds chosen by scripts/eval_semantic_threshold.py
+    # (results/semantic-threshold/, ADR-016). Re-run the evaluation before changing them.
+    embedding_model: sentence-transformers/all-MiniLM-L6-v2
+    candidate_threshold: 0.80
+    verifier_model: cross-encoder/quora-distilroberta-base
+    verifier_threshold: 0.992
+    ttl_s: 3600
+    max_prompt_chars: 2000
+
 reliability:
   # End-to-end budget for one request across all retries and failovers (to first byte).
   request_timeout_s: 60

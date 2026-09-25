@@ -110,6 +110,32 @@ class AuthConfig(_Strict):
     """Output tokens assumed for rate limiting when the caller does not send ``max_tokens``."""
 
 
+class ExactCacheConfig(_Strict):
+    enabled: bool = True
+    ttl_s: int = Field(default=3600, ge=1)
+
+
+class SemanticCacheConfig(_Strict):
+    """Two-stage semantic matching. Thresholds come from scripts/eval_semantic_threshold.py
+    (results/semantic-threshold/, ADR-016); change them only together with a new evaluation."""
+
+    enabled: bool = False
+    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    candidate_threshold: float = Field(default=0.80, gt=0, le=1)
+    """Cosine similarity for the nearest cached prompt to become a *candidate*."""
+    verifier_model: str | None = "cross-encoder/quora-distilroberta-base"
+    """Cross-encoder that must confirm a candidate. ``None`` = embedding-only (not
+    recommended: see ADR-016 for its measured false-hit rate)."""
+    verifier_threshold: float = Field(default=0.992, gt=0, le=1)
+    ttl_s: int = Field(default=3600, ge=1)
+    max_prompt_chars: int = Field(default=2000, ge=1)
+
+
+class CacheConfig(_Strict):
+    exact: ExactCacheConfig = ExactCacheConfig()
+    semantic: SemanticCacheConfig = SemanticCacheConfig()
+
+
 class LoggingConfig(_Strict):
     level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
 
@@ -119,6 +145,7 @@ class GatewayConfig(_Strict):
     reliability: ReliabilityConfig = ReliabilityConfig()
     redis: RedisConfig = RedisConfig()
     auth: AuthConfig = AuthConfig()
+    cache: CacheConfig = CacheConfig()
     providers: dict[str, ProviderConfig]
     routes: list[Route] = Field(min_length=1)
 

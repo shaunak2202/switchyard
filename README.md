@@ -6,8 +6,8 @@ fault-injecting mock), streams tokens back over SSE, and fails cleanly when an u
 misbehaves. It is built as a production-style service: structured logs, request tracing, typed
 config, and tests that exercise real sockets and real failure modes.
 
-> **Status:** Phases 1–3 (core proxy, reliability, auth and rate limiting) of 6 are done.
-> Caching, observability and load-test results are in progress. Performance numbers are `TBD` until they
+> **Status:** Phases 1–4 (core proxy, reliability, auth and rate limiting, caching) of 6 are
+> done. Observability and load-test results are in progress. Performance numbers are `TBD` until they
 > are measured and saved in `results/`.
 
 ## Architecture
@@ -17,7 +17,8 @@ flowchart LR
     C[Client / OpenAI SDK] -->|POST /v1/chat/completions| MW
     subgraph GW[Switchyard gateway]
         MW[Request ID + JSON access log] --> AU[Auth + rate limit<br/>1 Lua call]
-        AU --> H[Chat handler]
+        AU --> CA[Cache<br/>exact → semantic]
+        CA --> H[Chat handler]
         H --> S[ChatService<br/>retry · backoff · failover]
         S --> R[Router<br/>model alias → ordered targets]
         S --> CB[Circuit breaker<br/>per provider]
@@ -28,7 +29,8 @@ flowchart LR
     A1 --> G[(Groq API)]
     A2 --> O[(Ollama)]
     A3 --> M[(mock-provider)]
-    AU <--> RD[(Redis)]
+    AU <--> RD[(Redis 8<br/>keys · buckets · cache · HNSW index)]
+    CA <--> RD
 ```
 
 ## Quick start
@@ -112,6 +114,16 @@ Longer write-ups are in [`docs/decisions.md`](docs/decisions.md).
   - *Proof:* a test fires 400 concurrent admissions from 8 independent connection pools, and
     another fires 150 parallel HTTP requests; both assert the limit holds **exactly**. A
     control test shows a naive GET/SET limiter over-admitting under the same load.
+- **Exact-match cache.** Keyed on a SHA-256 of the normalised request. Only
+  `temperature: 0` requests are cached unless the caller opts in (`X-Switchyard-Cache: allow`),
+  because replaying one *sample* to everyone would change the API's meaning. `Cache-Control:
+  no-cache` / `no-store` bypass reads and writes. Streaming and non-streaming callers share
+  entries. [ADR-015]
+- **Semantic cache, with its threshold chosen from data.** A local sentence-transformers
+  embedding (all-MiniLM-L6-v2) finds the nearest cached prompt through a Redis HNSW index, and a
+  cross-encoder must confirm the match. The evaluation showed that embedding similarity alone
+  can't separate paraphrases from hard negatives at *any* useful threshold (see the table
+  below), which is why the second stage exists. [ADR-016]
 - **Tracing and logs.** Every response carries `x-request-id` (the caller's, if it is sane).
   Logs are one JSON object per line with the request ID attached, including logs written from
   inside streaming generators.
@@ -122,6 +134,30 @@ Longer write-ups are in [`docs/decisions.md`](docs/decisions.md).
   `PATCH /admin/config`, which is how tests and chaos load tests inject faults.
 
 ## Benchmarks
+
+### Semantic cache: threshold selection
+
+<!-- generated:semantic-cache -->
+Rule: **lowest threshold with false_hit_rate <= 0.01 on every source in the profile** (fixed before running the evaluation).
+
+| Configuration | Threshold | prompts hit / **false hit** | PAWS hit / **false hit** | QQP hit / **false hit** |
+|---|---|---|---|---|
+| Embedding only, `strict` profile | 1.0 | 0.0% / **0.0%** | 0.1% / **0.0%** | 0.1% / **0.0%** |
+| Embedding only, `faq` profile | 0.95 | 23.3% / **9.5%** | 89.1% / **77.5%** | 19.1% / **0.9%** |
+| Embedding ≥ 0.8 + `quora-distilroberta-base`, `strict` profile | 0.992 | 8.3% / **0.0%** | 2.6% / **0.6%** | 28.8% / **0.1%** |
+| Embedding ≥ 0.8 + `quora-distilroberta-base`, `faq` profile | 0.96 | 43.3% / **5.3%** | 69.1% / **59.5%** | 54.1% / **1.0%** |
+
+Pairs: prompts = 155 (hand-labelled, `data/semantic_pairs.jsonl`), PAWS = 2000, QQP = 2000 (stratified samples, seed 20260925). *Hit* = share of true paraphrase pairs matched; *false hit* = share of non-paraphrase pairs matched, i.e. a wrong answer served.
+
+Latency on Apple M5 Pro: embedding p50 2.693 ms / p95 3.204 ms per prompt; verifier `quora-distilroberta-base` p50 6.257 ms / p95 10.311 ms per pair.
+
+Source: [`results/semantic-threshold/20260925T184805Z`](results/semantic-threshold/20260925T184805Z/metrics.json)
+<!-- /generated:semantic-cache -->
+
+Reproduce with `pip install -e '.[eval]' && python scripts/eval_semantic_threshold.py
+--verifier cross-encoder/quora-distilroberta-base`.
+
+### Gateway load tests
 
 `TBD`: Phase 6. Tables will be generated from `results/`.
 
@@ -142,6 +178,7 @@ Longer write-ups are in [`docs/decisions.md`](docs/decisions.md).
 | Missing, unknown or disabled API key | `401 invalid_api_key` |
 | Key over its requests/min or tokens/min limit | `429 rate_limit_exceeded` + `Retry-After`; nothing charged |
 | Single request larger than the key's tokens/min | `400 tokens_exceed_limit` (it could never succeed) |
+| Cache (Redis) error during lookup or store | Treated as a miss; request proceeds |
 | Redis unreachable | `503 auth_unavailable` (fail closed, ADR-013); `/readyz` → 503 |
 
 ## Limitations
