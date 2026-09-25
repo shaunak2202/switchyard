@@ -1,0 +1,56 @@
+name: switchyard
+
+x-healthcheck: &http-healthcheck
+  interval: 5s
+  timeout: 3s
+  retries: 12
+  start_period: 5s
+
+services:
+  gateway:
+    build: .
+    image: switchyard:dev
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      SWITCHYARD_CONFIG: /app/config/gateway.yaml
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      mock-primary: { condition: service_healthy }
+      mock-secondary: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      <<: *http-healthcheck
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz')"]
+
+  mock-primary: &mock
+    image: switchyard:dev
+    build: .
+    command: ["uvicorn", "mock_provider.app:create_app", "--factory", "--host", "0.0.0.0", "--port", "9000", "--no-access-log", "--log-level", "warning", "--loop", "uvloop", "--http", "httptools"]
+    environment:
+      MOCK_TTFT_MS: ${MOCK_TTFT_MS:-50}
+      MOCK_INTER_TOKEN_MS: ${MOCK_INTER_TOKEN_MS:-5}
+      MOCK_OUTPUT_TOKENS: ${MOCK_OUTPUT_TOKENS:-32}
+    ports:
+      - "9001:9000"
+    healthcheck:
+      <<: *http-healthcheck
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9000/health')"]
+
+  mock-secondary:
+    <<: *mock
+    ports:
+      - "9002:9000"
+
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      <<: *http-healthcheck
+      test: ["CMD", "redis-cli", "ping"]

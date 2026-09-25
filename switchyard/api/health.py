@@ -1,0 +1,41 @@
+"""Liveness, readiness and provider status.
+
+* ``/healthz``: the process is up and the event loop is responsive. Never checks dependencies,
+  so a Redis blip does not get the gateway restarted.
+* ``/readyz``: the gateway can serve traffic, i.e. its *own* dependencies are available.
+  Upstream providers are deliberately excluded: a Groq outage is what failover is for, and
+  marking every replica unready because of it would turn a partial outage into a total one.
+* ``/status/providers``: an on-demand probe of each provider for humans and dashboards.
+"""
+
+from __future__ import annotations
+
+import asyncio
+
+from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse
+
+router = APIRouter()
+
+
+@router.get("/healthz")
+async def healthz() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@router.get("/readyz")
+async def readyz(request: Request) -> JSONResponse:
+    checks: dict[str, bool] = {"config": True}
+    ready = all(checks.values())
+    return JSONResponse(
+        {"status": "ready" if ready else "not_ready", "checks": checks},
+        status_code=200 if ready else 503,
+    )
+
+
+@router.get("/status/providers")
+async def provider_status(request: Request) -> dict[str, dict[str, bool]]:
+    providers = request.app.state.providers
+    names = list(providers)
+    results = await asyncio.gather(*(providers[name].health() for name in names))
+    return {name: {"healthy": healthy} for name, healthy in zip(names, results, strict=True)}

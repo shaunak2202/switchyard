@@ -1,0 +1,48 @@
+# Switchyard gateway configuration.
+# Values written as $-brace VAR (optionally with :-default) are read from the environment.
+
+logging:
+  level: ${SWITCHYARD_LOG_LEVEL:-INFO}
+
+providers:
+  groq:
+    type: groq
+    base_url: https://api.groq.com/openai/v1
+    api_key: ${GROQ_API_KEY:-}          # empty => provider skipped at startup
+    timeouts: { connect_s: 2, first_byte_s: 10, idle_s: 10, total_s: 30 }
+
+  ollama:
+    type: ollama
+    base_url: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434/v1}
+    # Local models on a laptop can take a while to load on first use.
+    timeouts: { connect_s: 1, first_byte_s: 60, idle_s: 30, total_s: 120 }
+
+  mock-primary:
+    type: mock
+    base_url: ${MOCK_PRIMARY_URL:-http://mock-primary:9000/v1}
+    timeouts: { connect_s: 1, first_byte_s: 5, idle_s: 5, total_s: 15 }
+
+  mock-secondary:
+    type: mock
+    base_url: ${MOCK_SECONDARY_URL:-http://mock-secondary:9000/v1}
+    timeouts: { connect_s: 1, first_byte_s: 5, idle_s: 5, total_s: 15 }
+
+# A route maps a public model name to providers in priority order.
+# Callers can also pin a provider directly with "<provider>/<model>".
+routes:
+  - model: fast
+    targets:
+      - { provider: groq, model: llama-3.1-8b-instant }
+      - { provider: ollama, model: "llama3.2:1b" }
+      - { provider: mock-primary, model: mock-1 }
+
+  - model: local
+    targets:
+      - { provider: ollama, model: "llama3.2:1b" }
+      - { provider: mock-primary, model: mock-1 }
+
+  # Used by load tests and integration tests: never touches a real provider.
+  - model: mock
+    targets:
+      - { provider: mock-primary, model: mock-1 }
+      - { provider: mock-secondary, model: mock-1 }
