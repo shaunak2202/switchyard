@@ -119,3 +119,23 @@ TOKENS = Counter(
     "Tokens reported by providers.",
     ["provider", "type"],
 )
+
+LOOP_LAG = Gauge(
+    "switchyard_event_loop_lag_seconds",
+    "Smoothed event-loop lag: how late a timer fires. The overload signal (ADR-020).",
+)
+SHED = Counter(
+    "switchyard_load_shed_total",
+    "Requests refused with 503 because the event loop was overloaded.",
+)
+SEMANTIC_SKIPPED = Counter(
+    "switchyard_cache_semantic_skipped_total",
+    "Semantic lookups or stores skipped to protect latency (ADR-021).",
+    ["stage", "reason"],
+)
+BATCH_SIZE = Histogram(
+    "switchyard_cache_model_batch_size",
+    "Prompts per semantic-cache model forward pass.",
+    ["model"],
+    buckets=(1, 2, 4, 8, 16, 32, 64),
+)

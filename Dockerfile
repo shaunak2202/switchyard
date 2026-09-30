@@ -27,7 +27,7 @@ COPY mock_provider ./mock_provider
 RUN pip install --no-deps .
 USER app
 EXPOSE 9000
-CMD ["uvicorn", "mock_provider.app:create_app", "--factory", "--host", "0.0.0.0", "--port", "9000", "--no-access-log", "--log-level", "warning", "--loop", "uvloop", "--http", "httptools"]
+CMD ["uvicorn", "mock_provider.app:create_app", "--factory", "--host", "0.0.0.0", "--port", "9000", "--no-access-log", "--log-level", "warning", "--timeout-keep-alive", "75", "--loop", "uvloop", "--http", "httptools"]
 
 # ---------------------------------------------------------------------------------------------
 FROM base AS gateway
@@ -51,4 +51,4 @@ COPY config ./config
 
 USER app
 EXPOSE 8000
-CMD ["uvicorn", "switchyard.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--no-access-log", "--loop", "uvloop", "--http", "httptools"]
+CMD ["uvicorn", "switchyard.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--no-access-log", "--timeout-keep-alive", "75", "--loop", "uvloop", "--http", "httptools"]

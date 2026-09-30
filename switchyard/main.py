@@ -26,6 +26,7 @@ from switchyard.config import GatewayConfig, load_config
 from switchyard.errors import GatewayError, InvalidRequestError
 from switchyard.logs import configure_logging
 from switchyard.middleware import RequestContextMiddleware
+from switchyard.overload import LoadShedMiddleware, LoopLagMonitor
 from switchyard.providers import TransportFactory, build_providers
 from switchyard.ratelimit.limiter import RateLimiter
 from switchyard.reliability.backoff import RetryPolicy
@@ -46,6 +47,7 @@ def create_app(
 ) -> FastAPI:
     config = config or load_config()
     configure_logging(config.logging.level)
+    monitor = LoopLagMonitor()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -71,6 +73,7 @@ def create_app(
         )
         if not config.auth.enabled:
             logger.warning("auth is DISABLED: every request is anonymous and unlimited")
+        monitor.start()
         app.state.tasks = BackgroundTasks()
         app.state.cache = await _build_cache(config, redis, embedder, verifier)
         providers = build_providers(config, transport_factory)
@@ -99,12 +102,21 @@ def create_app(
         try:
             yield
         finally:
+            await monitor.stop()
             await app.state.tasks.drain()
             for provider in providers.values():
                 await provider.aclose()
             await redis.aclose()
 
     app = FastAPI(title="Switchyard", version=__version__, lifespan=lifespan)
+    if config.overload.enabled:
+        # Added first so it runs *inside* the request-context middleware: shed requests still
+        # get a request id, an access log line and a requests_total{status="503"} sample.
+        app.add_middleware(
+            LoadShedMiddleware,
+            monitor=monitor,
+            max_lag_s=config.overload.max_loop_lag_ms / 1000,
+        )
     app.add_middleware(RequestContextMiddleware)
     app.include_router(chat.router)
     app.include_router(health.router)
@@ -130,6 +142,9 @@ async def _build_cache(
     if cfg.semantic.enabled:
         try:
             if embedder is None:
+                import torch
+
+                torch.set_num_threads(cfg.semantic.torch_threads)
                 embedder = await SentenceTransformerEmbedder.load(cfg.semantic.embedding_model)
             if verifier is None and cfg.semantic.verifier_model is not None:
                 verifier = await CrossEncoderVerifier.load(cfg.semantic.verifier_model)
@@ -163,7 +178,13 @@ async def _build_cache(
             "verifier_threshold": cfg.semantic.verifier_threshold if semantic else None,
         },
     )
-    return ResponseCache(exact, semantic, max_semantic_chars=cfg.semantic.max_prompt_chars)
+    return ResponseCache(
+        exact,
+        semantic,
+        max_semantic_chars=cfg.semantic.max_prompt_chars,
+        semantic_budget_s=cfg.semantic.lookup_budget_ms / 1000,
+        semantic_max_queue=cfg.semantic.max_queue,
+    )
 
 
 def _install_error_handlers(app: FastAPI) -> None:

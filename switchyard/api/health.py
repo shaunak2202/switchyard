@@ -62,3 +62,9 @@ async def provider_status(request: Request) -> dict[str, dict[str, object]]:
 @router.get("/metrics", include_in_schema=False)
 async def prometheus_metrics() -> Response:
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+
+@router.get("/status/cache")
+async def cache_status(request: Request) -> dict[str, bool]:
+    cache = request.app.state.cache
+    return {"exact": cache.exact is not None, "semantic": cache.semantic is not None}

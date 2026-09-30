@@ -13,6 +13,7 @@ miss and are logged: the cache must never be the reason a request fails.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import time
 import uuid
@@ -221,10 +222,22 @@ class ResponseCache:
         semantic: SemanticCache | None,
         *,
         max_semantic_chars: int = 2000,
+        semantic_budget_s: float = 0.05,
+        semantic_max_queue: int = 64,
     ) -> None:
         self.exact = exact
         self.semantic = semantic
         self.max_semantic_chars = max_semantic_chars
+        self.semantic_budget_s = semantic_budget_s
+        self.semantic_max_queue = semantic_max_queue
+
+    def _semantic_busy(self) -> bool:
+        if self.semantic is None:
+            return False
+        depth = self.semantic.embedder.queue_depth
+        if self.semantic.verifier is not None:
+            depth = max(depth, self.semantic.verifier.queue_depth)
+        return depth >= self.semantic_max_queue
 
     @property
     def enabled(self) -> bool:
@@ -249,20 +262,36 @@ class ResponseCache:
                 if result.hit:
                     return result
             if self.semantic is not None and result.semantic is not None:
-                started = time.perf_counter()
-                result.vector = await self.semantic.embedder.embed(result.semantic.text)
-                metrics.EMBEDDING_DURATION.labels("embedding").observe(
-                    time.perf_counter() - started
-                )
-                result.hit = await self.semantic.search(
-                    result.semantic.namespace, result.semantic.text, result.vector
-                )
-                metrics.CACHE_LOOKUPS.labels("semantic", "hit" if result.hit else "miss").inc()
+                result.hit = await self._semantic_lookup(self.semantic, result)
         except (RedisError, ValueError) as exc:
             logger.warning("cache lookup failed; treating as miss", extra={"error": repr(exc)})
             metrics.CACHE_LOOKUPS.labels("any", "error").inc()
             result.hit = None
         return result
+
+    async def _semantic_lookup(
+        self, semantic: SemanticCache, result: CacheLookup
+    ) -> CacheHit | None:
+        """Embedding + vector search + verification, within a latency budget (ADR-021)."""
+        assert result.semantic is not None
+        if self._semantic_busy():
+            metrics.SEMANTIC_SKIPPED.labels("lookup", "queue_full").inc()
+            return None
+        started = time.perf_counter()
+        try:
+            async with asyncio.timeout(self.semantic_budget_s):
+                result.vector = await semantic.embedder.embed(result.semantic.text)
+                metrics.EMBEDDING_DURATION.labels("embedding").observe(
+                    time.perf_counter() - started
+                )
+                hit = await semantic.search(
+                    result.semantic.namespace, result.semantic.text, result.vector
+                )
+        except TimeoutError:
+            metrics.SEMANTIC_SKIPPED.labels("lookup", "budget").inc()
+            return None
+        metrics.CACHE_LOOKUPS.labels("semantic", "hit" if hit else "miss").inc()
+        return hit
 
     async def store(
         self, lookup: CacheLookup, completion: ChatCompletion, directive: CacheDirective
@@ -277,6 +306,11 @@ class ResponseCache:
             if self.semantic is not None and lookup.semantic is not None:
                 vector = lookup.vector
                 if vector is None:
+                    # Stores run after the response, so there is no latency budget; but when
+                    # the model is saturated, skipping one entry beats growing its queue.
+                    if self._semantic_busy():
+                        metrics.SEMANTIC_SKIPPED.labels("store", "queue_full").inc()
+                        return
                     vector = await self.semantic.embedder.embed(lookup.semantic.text)
                 await self.semantic.store(
                     lookup.semantic.namespace, lookup.semantic.text, vector, completion

@@ -18,7 +18,10 @@ cache:
     enabled: true
     ttl_s: 3600
   semantic:
-    enabled: true
+    # Off by default: in a CPU-only container the models cost more latency than the tier
+    # saves (see ADR-021 and results/loadtest/*steady*). Enable it in front of slow upstreams
+    # or with faster inference hardware.
+    enabled: false
     # Two-stage matching; thresholds chosen by scripts/eval_semantic_threshold.py
     # (results/semantic-threshold/, ADR-016). Re-run the evaluation before changing them.
     embedding_model: sentence-transformers/all-MiniLM-L6-v2
@@ -27,6 +30,15 @@ cache:
     verifier_threshold: 0.992
     ttl_s: 3600
     max_prompt_chars: 2000
+    # The semantic tier may add at most this much to a request; otherwise it is skipped (ADR-021).
+    lookup_budget_ms: 50
+    max_queue: 64
+    torch_threads: 2
+
+overload:
+  # Shed new chat requests (503 + Retry-After) while the event loop is saturated (ADR-020).
+  enabled: true
+  max_loop_lag_ms: 50
 
 reliability:
   # End-to-end budget for one request across all retries and failovers (to first byte).

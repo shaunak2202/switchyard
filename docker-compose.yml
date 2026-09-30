@@ -1,5 +1,11 @@
 name: switchyard
 
+# Every open connection is a file descriptor. Docker's default soft limit (1024) is below what
+# the gateway needs (clients + a pool per provider + Redis) and caps the mocks under load
+# (ADR-018).
+x-ulimits: &ulimits
+  nofile: { soft: 65536, hard: 65536 }
+
 x-healthcheck: &http-healthcheck
   interval: 5s
   timeout: 3s
@@ -10,6 +16,7 @@ services:
   gateway:
     build: { context: ., target: gateway }
     image: switchyard-gateway:dev
+    ulimits: *ulimits
     env_file:
       - path: .env
         required: false
@@ -31,6 +38,7 @@ services:
   mock-primary: &mock
     build: { context: ., target: mock }
     image: switchyard-mock:dev
+    ulimits: *ulimits
     environment:
       MOCK_TTFT_MS: ${MOCK_TTFT_MS:-50}
       MOCK_INTER_TOKEN_MS: ${MOCK_INTER_TOKEN_MS:-5}

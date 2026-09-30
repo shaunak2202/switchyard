@@ -24,3 +24,4 @@ htmlcov/
 .DS_Store
 .idea/
 .vscode/
+loadtest/.tmp/

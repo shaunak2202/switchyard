@@ -69,6 +69,24 @@ def _error_message(response: httpx.Response) -> str:
     return f"HTTP {response.status_code}"
 
 
+class _Shard:
+    """One ``httpx.AsyncClient`` plus a semaphore sized to its connection pool.
+
+    Why shards (ADR-019): httpcore's pool re-scans every connection and every queued request on
+    each request start and finish, so its CPU cost grows with pool size times queue length.
+    Profiling under load put ~45% of gateway CPU there and throughput collapsed past
+    saturation. Several small pools keep each scan short, and the semaphore keeps httpcore's own
+    queue empty: excess requests wait on an O(1) semaphore instead of a list that is scanned.
+    """
+
+    __slots__ = ("client", "in_flight", "slots")
+
+    def __init__(self, client: httpx.AsyncClient, size: int) -> None:
+        self.client = client
+        self.slots = asyncio.Semaphore(size)
+        self.in_flight = 0
+
+
 class OpenAICompatibleProvider(Provider):
     #: Whether the upstream honours ``stream_options.include_usage``.
     supports_stream_usage: bool = True
@@ -85,23 +103,37 @@ class OpenAICompatibleProvider(Provider):
         headers = {"content-type": "application/json"}
         if config.api_key is not None:
             headers["authorization"] = f"Bearer {config.api_key.get_secret_value()}"
-        self._client = httpx.AsyncClient(
-            base_url=config.base_url,
-            headers=headers,
-            # httpx's read timeout is only a backstop; precise first-byte/idle/total deadlines
-            # are enforced with asyncio timeouts below so they compose with retries.
-            timeout=httpx.Timeout(
-                connect=t.connect_s,
-                read=max(t.first_byte_s, t.idle_s, t.total_s),
-                write=t.connect_s,
-                pool=t.connect_s,
-            ),
-            limits=httpx.Limits(
-                max_connections=config.max_connections,
-                max_keepalive_connections=config.max_connections,
-            ),
-            transport=transport,
-        )
+        per_shard = max(config.max_connections // config.pool_shards, 1)
+        self._shards = [
+            _Shard(
+                httpx.AsyncClient(
+                    base_url=config.base_url,
+                    headers=headers,
+                    # httpx's read timeout is only a backstop; precise first-byte/idle/total
+                    # deadlines are enforced with asyncio timeouts so they compose with retries.
+                    timeout=httpx.Timeout(
+                        connect=t.connect_s,
+                        read=max(t.first_byte_s, t.idle_s, t.total_s),
+                        write=t.connect_s,
+                        # The semaphore guarantees a free connection, so the pool never waits.
+                        pool=t.connect_s,
+                    ),
+                    limits=httpx.Limits(
+                        max_connections=per_shard,
+                        max_keepalive_connections=per_shard,
+                        keepalive_expiry=config.keepalive_expiry_s,
+                    ),
+                    transport=transport,
+                ),
+                per_shard,
+            )
+            for _ in range(config.pool_shards)
+        ]
+        self._client = self._shards[0].client  # for cheap calls like health probes
+
+    def _pick_shard(self) -> _Shard:
+        # Least loaded; N is small (single digits), so a linear scan is cheaper than a heap.
+        return min(self._shards, key=lambda shard: shard.in_flight)
 
     # -- hooks -----------------------------------------------------------------------------
 
@@ -137,13 +169,17 @@ class OpenAICompatibleProvider(Provider):
         body = request.upstream_body(model, stream_usage=False)
         body["stream"] = False
         total = self.config.timeouts.total_s
+        shard = self._pick_shard()
+        shard.in_flight += 1
         try:
-            async with asyncio.timeout(total):
-                response = await self._client.post("/chat/completions", json=body)
+            async with asyncio.timeout(total), shard.slots:
+                response = await shard.client.post("/chat/completions", json=body)
         except TimeoutError:
             raise self._timeout("response", total) from None
         except httpx.HTTPError as exc:
             raise self._from_http_error(exc) from exc
+        finally:
+            shard.in_flight -= 1
         if response.status_code >= 400:
             raise self._from_status(response)
         try:
@@ -156,17 +192,27 @@ class OpenAICompatibleProvider(Provider):
     ) -> AsyncGenerator[ChatCompletionChunk, None]:
         timeouts = self.config.timeouts
         body = request.upstream_body(model, stream_usage=self.supports_stream_usage)
-        http_request = self._client.build_request("POST", "/chat/completions", json=body)
+        shard = self._pick_shard()
+        http_request = shard.client.build_request("POST", "/chat/completions", json=body)
         loop = asyncio.get_running_loop()
         first_byte_deadline = loop.time() + timeouts.first_byte_s
 
+        shard.in_flight += 1
+        acquired = False
         try:
             async with asyncio.timeout_at(first_byte_deadline):
-                response = await self._client.send(http_request, stream=True)
-        except TimeoutError:
-            raise self._timeout("response headers", timeouts.first_byte_s) from None
-        except httpx.HTTPError as exc:
-            raise self._from_http_error(exc) from exc
+                await shard.slots.acquire()
+                acquired = True
+                response = await shard.client.send(http_request, stream=True)
+        except BaseException as exc:
+            if acquired:
+                shard.slots.release()
+            shard.in_flight -= 1
+            if isinstance(exc, TimeoutError):
+                raise self._timeout("response headers", timeouts.first_byte_s) from None
+            if isinstance(exc, httpx.HTTPError):
+                raise self._from_http_error(exc) from exc
+            raise
 
         events = iter_sse_data(response.aiter_lines())
         try:
@@ -205,8 +251,12 @@ class OpenAICompatibleProvider(Provider):
                 finished = finished or any(c.get("finish_reason") for c in chunk.choices)
                 yield self.normalize_chunk(chunk)
         finally:
-            await events.aclose()
-            await response.aclose()
+            try:
+                await events.aclose()
+                await response.aclose()
+            finally:
+                shard.slots.release()
+                shard.in_flight -= 1
 
     def _parse_chunk(self, data: str) -> ChatCompletionChunk:
         try:
@@ -230,4 +280,5 @@ class OpenAICompatibleProvider(Provider):
         return response.status_code == 200
 
     async def aclose(self) -> None:
-        await self._client.aclose()
+        for shard in self._shards:
+            await shard.client.aclose()

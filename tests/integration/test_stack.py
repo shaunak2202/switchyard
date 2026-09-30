@@ -197,6 +197,8 @@ def test_semantic_cache_with_real_models(auth: dict[str, str]) -> None:
     Each run gets a unique system prompt (part of the cache namespace, not embedded), so the
     user text stays natural: an appended random tag measurably lowers the verifier's score.
     """
+    if not httpx.get(f"{GATEWAY}/status/cache", timeout=5).json()["semantic"]:
+        pytest.skip("semantic cache is disabled in this deployment (the default; ADR-021)")
     system = f"Test run {time.monotonic_ns()}."
 
     def ask(text: str) -> httpx.Response:

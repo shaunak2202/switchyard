@@ -65,6 +65,12 @@ fmt: install ## Auto-format
 typecheck: install ## mypy --strict
 	$(BIN)/mypy
 
+.PHONY: loadtest
+loadtest: install ## Run every load-test scenario against the mocks (~1 h), then refresh README tables
+	@curl -sf localhost:8000/readyz >/dev/null || $(MAKE) up
+	$(BIN)/python loadtest/run.py all
+	$(BIN)/python scripts/render_readme.py
+
 .PHONY: dashboard
 dashboard: ## Regenerate the Grafana dashboard JSON from scripts/build_dashboard.py
 	$(BIN)/python scripts/build_dashboard.py

@@ -51,6 +51,13 @@ class ProviderConfig(_Strict):
     enabled: bool = True
     timeouts: Timeouts = Timeouts()
     max_connections: int = Field(default=512, ge=1)
+    """Total upstream connections for this provider, split evenly across ``pool_shards``."""
+    pool_shards: int = Field(default=8, ge=1, le=64)
+    """Independent httpx clients the pool is split into (ADR-019). 1 = a single httpx pool."""
+    keepalive_expiry_s: float = Field(default=4.0, gt=0)
+    """Drop idle pooled connections after this long. Must be *shorter* than the upstream's own
+    idle timeout, or a request can be written onto a connection the server is closing
+    (ADR-018)."""
 
     @field_validator("base_url")
     @classmethod
@@ -129,11 +136,24 @@ class SemanticCacheConfig(_Strict):
     verifier_threshold: float = Field(default=0.992, gt=0, le=1)
     ttl_s: int = Field(default=3600, ge=1)
     max_prompt_chars: int = Field(default=2000, ge=1)
+    lookup_budget_ms: float = Field(default=50.0, gt=0)
+    """Longest the semantic tier may add to a request. Past it the lookup counts as a miss:
+    the cache is an optimisation and must never make a request slower than going upstream."""
+    max_queue: int = Field(default=64, ge=1)
+    """Skip the semantic tier outright when this many prompts are already queued for a model."""
+    torch_threads: int = Field(default=2, ge=1)
+    """CPU threads for model inference. The event loop needs a core of its own."""
 
 
 class CacheConfig(_Strict):
     exact: ExactCacheConfig = ExactCacheConfig()
     semantic: SemanticCacheConfig = SemanticCacheConfig()
+
+
+class OverloadConfig(_Strict):
+    enabled: bool = True
+    max_loop_lag_ms: float = Field(default=50.0, gt=0)
+    """Shed new chat requests while smoothed event-loop lag exceeds this."""
 
 
 class LoggingConfig(_Strict):
@@ -146,6 +166,7 @@ class GatewayConfig(_Strict):
     redis: RedisConfig = RedisConfig()
     auth: AuthConfig = AuthConfig()
     cache: CacheConfig = CacheConfig()
+    overload: OverloadConfig = OverloadConfig()
     providers: dict[str, ProviderConfig]
     routes: list[Route] = Field(min_length=1)
 
