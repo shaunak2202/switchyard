@@ -1,0 +1,155 @@
+{
+  "scenario": "steady",
+  "variant": "default",
+  "headline": {
+    "offered_rps": 200,
+    "requests": 36001,
+    "achieved_rps": 200.0,
+    "dropped_iterations": 0,
+    "failed": 0,
+    "hit_rate": 0.7543,
+    "exact_hit_rate": 0.7543,
+    "semantic_hit_rate": 0.0
+  },
+  "outcomes": {
+    "hit-exact": 27154,
+    "hit-semantic": 0,
+    "miss": 8847,
+    "bypass": 0
+  },
+  "latency_ms_by_cache": {
+    "hit-exact": {
+      "p50": 0.839,
+      "p95": 1.607,
+      "p99": 2.581,
+      "max": 49.006,
+      "count": 27154
+    },
+    "hit-semantic": {
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0,
+      "count": 0
+    },
+    "miss": {
+      "p50": 213.797,
+      "p95": 223.875,
+      "p99": 229.671,
+      "max": 277.073,
+      "count": 8847
+    },
+    "bypass": {
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0,
+      "count": 0
+    }
+  },
+  "stream_ttfb_ms_by_cache": {
+    "hit-exact": {
+      "p50": 0.841,
+      "p95": 1.626,
+      "p99": 2.51,
+      "max": 48.958,
+      "count": 13687
+    },
+    "hit-semantic": {
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0,
+      "count": 0
+    },
+    "miss": {
+      "p50": 52.334,
+      "p95": 54.029,
+      "p99": 56.445,
+      "max": 88.915,
+      "count": 4364
+    },
+    "bypass": {
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0,
+      "count": 0
+    }
+  },
+  "server": {
+    "cache_lookups": {
+      "exact:hit": 26745,
+      "exact:miss": 8747,
+      "semantic:hit": 0,
+      "semantic:miss": 0
+    },
+    "semantic_verifier_rejections": 0,
+    "semantic_skipped": {
+      "lookup:budget": 0,
+      "lookup:queue_full": 0,
+      "store:budget": 0,
+      "store:queue_full": 0
+    },
+    "model_latency_ms": {
+      "embedding": {
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "at_least": [],
+        "count": 0
+      },
+      "verifier": {
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "at_least": [],
+        "count": 0
+      }
+    },
+    "batch_size_mean": {
+      "embed": null,
+      "verify": null
+    },
+    "overhead_ms": {
+      "false": {
+        "p50": 0.656,
+        "p95": 1.359,
+        "p99": 2.436,
+        "at_least": [],
+        "count": 4429
+      },
+      "true": {
+        "p50": 0.697,
+        "p95": 1.423,
+        "p99": 2.515,
+        "at_least": [],
+        "count": 4312
+      }
+    },
+    "ttft_ms_by_cache": {
+      "miss": {
+        "p50": 62.497,
+        "p95": 73.771,
+        "p99": 74.773,
+        "at_least": [],
+        "count": 4312
+      },
+      "hit-exact": {
+        "p50": 0.563,
+        "p95": 1.871,
+        "p99": 2.433,
+        "at_least": [],
+        "count": 13493
+      },
+      "hit-semantic": {
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "at_least": [],
+        "count": 0
+      }
+    },
+    "shed": 0
+  }
+}

@@ -75,13 +75,31 @@ def value_at(values: list[list[float]], t: float) -> float:
     return best
 
 
-def delta(series: list[dict[str, Any]], t0: float, t1: float, **match: str) -> float:
+def increase(values: list[list[float]], t0: float, t1: float) -> float:
+    """Counter increase over [t0, t1], reset-aware like PromQL's ``increase()``.
+
+    Each run restarts the gateway, so a counter can drop to 0 inside a window (and until the new
+    process reports a series, Prometheus may still return the old process's last value). A drop
+    between consecutive samples is a reset: the new value counts from zero.
+    """
     total = 0.0
-    for s in series:
-        if all(s["labels"].get(k) == v for k, v in match.items()):
-            # Counters reset when the gateway restarts; each run restarts it before starting.
-            total += max(value_at(s["values"], t1) - value_at(s["values"], t0), 0.0)
+    prev = value_at(values, t0)
+    for ts, v in values:
+        if ts <= t0:
+            continue
+        if ts > t1:
+            break
+        total += v - prev if v >= prev else v
+        prev = v
     return total
+
+
+def delta(series: list[dict[str, Any]], t0: float, t1: float, **match: str) -> float:
+    return sum(
+        increase(s["values"], t0, t1)
+        for s in series
+        if all(s["labels"].get(k) == v for k, v in match.items())
+    )
 
 
 def bucket_deltas(
@@ -91,7 +109,7 @@ def bucket_deltas(
     for s in series:
         if all(s["labels"].get(k) == v for k, v in match.items()):
             le = math.inf if s["labels"]["le"] == "+Inf" else float(s["labels"]["le"])
-            buckets[le] += max(value_at(s["values"], t1) - value_at(s["values"], t0), 0.0)
+            buckets[le] += increase(s["values"], t0, t1)
     return dict(buckets)
 
 
@@ -116,11 +134,23 @@ def histogram_quantile(q: float, buckets: dict[float, float]) -> float | None:
     return ordered[-2][0] if len(ordered) > 1 else None
 
 
-def quantiles_ms(buckets: dict[float, float]) -> dict[str, float | None]:
-    out: dict[str, float | None] = {}
+def _in_overflow(q: float, buckets: dict[float, float]) -> bool:
+    """True if the q-th rank lies in the +Inf bucket: the quantile is only a lower bound."""
+    finite = [c for le, c in buckets.items() if not math.isinf(le)]
+    total = buckets.get(math.inf, 0.0)
+    return bool(total) and bool(finite) and max(finite) < q * total
+
+
+def quantiles_ms(buckets: dict[float, float]) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    capped = []
     for q in (0.5, 0.95, 0.99):
         v = histogram_quantile(q, buckets)
-        out[f"p{int(q * 100)}"] = None if v is None else round(v * 1000, 3)
+        key = f"p{int(q * 100)}"
+        out[key] = None if v is None else round(v * 1000, 3)
+        if _in_overflow(q, buckets):
+            capped.append(key)
+    out["at_least"] = capped  # these quantiles exceed the largest bucket: lower bounds only
     out["count"] = round(buckets.get(math.inf, 0.0))  # the +Inf bucket holds every observation
     return out
 
@@ -470,12 +500,15 @@ def analyze_burst(run_dir: Path, run: dict[str, Any], summary: dict[str, Any]) -
         values = [r["duration"] for r in rs if r["code"] == code]
         return {"p50": pct(values, 0.5), "p99": pct(values, 0.99), "count": len(values)}
 
-    sustain_ok = [r for r in sustain if r["code"] == "200"]
-    sustain_span = (
-        (max(r["start"] for r in sustain) - min(r["start"] for r in sustain)) / 1000
-        if sustain
-        else 0
-    )
+    # Steady-state admission: the second half of the sustain phase. The first half still spends
+    # tokens that refilled while the bucket sat idle between the phases.
+    if sustain:
+        s0, s1 = min(r["start"] for r in sustain), max(r["start"] for r in sustain)
+        half = s0 + (s1 - s0) / 2
+        sustain_ok = [r for r in sustain if r["code"] == "200" and r["start"] >= half]
+        sustain_span = (s1 - half) / 1000
+    else:
+        sustain_ok, sustain_span = [], 0
     return {
         "headline": {
             "key_rpm": rpm,

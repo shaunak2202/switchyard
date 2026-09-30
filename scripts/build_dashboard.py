@@ -62,6 +62,8 @@ def panel(
     mappings: list[dict[str, Any]] | None = None,
 ) -> None:
     field_defaults: dict[str, Any] = {"unit": unit}
+    if unit == "percentunit":
+        field_defaults |= {"min": 0, "max": 1}  # ratios: a fixed 0-100% axis
     if kind == "timeseries":
         field_defaults["custom"] = {
             "drawStyle": "line",

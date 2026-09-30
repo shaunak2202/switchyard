@@ -1,0 +1,7 @@
+{
+  "run": "20260930T030807Z__chaos__hang",
+  "scenario": "chaos",
+  "variant": "hang",
+  "description": "the primary mock is broken mid-run, so traffic fails over and the breaker opens",
+  "url": "http://localhost:3000/d/switchyard?orgId=1&from=1790737685453&to=1790737836182&kiosk&theme=light"
+}

@@ -1,0 +1,26 @@
+{
+  "scenario": "burst",
+  "variant": "default",
+  "script": "burst.js",
+  "env": {
+    "BURST": "2000",
+    "BURST_VUS": "200",
+    "SUSTAIN_RATE": "50",
+    "SUSTAIN_SECONDS": "60",
+    "TARGET": "http://gateway:8000"
+  },
+  "key_limits": {
+    "rpm": 300,
+    "tpm": 100000000
+  },
+  "window": {
+    "start": 1790737981.939587,
+    "end": 1790738052.3475971
+  },
+  "git": {
+    "sha": "a1c349a288f43aebc0114969e5add397dc1f086e",
+    "dirty": true
+  },
+  "command": "loadtest/run.py all",
+  "k6_command": "docker run --rm --network switchyard_default --cpus 2 -v /Users/shaunak/Projects/Switchyard/loadtest:/scripts:ro -v /Users/shaunak/Projects/Switchyard/results/loadtest/20260930T031249Z__burst__default:/out -e K6_CSV_TIME_FORMAT=unix_milli -e BURST=2000 -e BURST_VUS=200 -e SUSTAIN_RATE=50 -e SUSTAIN_SECONDS=60 -e API_KEY=<redacted> -e TARGET=http://gateway:8000 grafana/k6:1.2.2 run --quiet --out csv=/out/samples.csv.gz /scripts/burst.js"
+}

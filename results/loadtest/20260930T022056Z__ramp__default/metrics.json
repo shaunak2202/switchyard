@@ -1,0 +1,342 @@
+{
+  "scenario": "ramp",
+  "variant": "default",
+  "rule": "sustainable = error <= 1%, no dropped iterations, p99 <= 2x lightest-step p99",
+  "steps": [
+    {
+      "offered_rps": 50,
+      "sent": 1501,
+      "achieved_rps": 50.0,
+      "ok_rps": 50.0,
+      "error_pct": 0.0,
+      "status": {
+        "200": 1501,
+        "429": 0,
+        "502": 0,
+        "503": 0,
+        "504": 0,
+        "0": 0
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 215.487,
+        "p95": 219.168,
+        "p99": 227.694,
+        "max": 266.035,
+        "count": 1501
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 1.133,
+        "p95": 1.931,
+        "p99": 3.708,
+        "at_least": [],
+        "count": 1480
+      },
+      "server_ttft_ms": null,
+      "shed": 0
+    },
+    {
+      "offered_rps": 100,
+      "sent": 3001,
+      "achieved_rps": 100.0,
+      "ok_rps": 100.0,
+      "error_pct": 0.0,
+      "status": {
+        "200": 3001,
+        "429": 0,
+        "502": 0,
+        "503": 0,
+        "504": 0,
+        "0": 0
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 213.849,
+        "p95": 217.129,
+        "p99": 223.674,
+        "max": 263.366,
+        "count": 3001
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 0.883,
+        "p95": 1.863,
+        "p99": 3.224,
+        "at_least": [],
+        "count": 2984
+      },
+      "server_ttft_ms": null,
+      "shed": 0
+    },
+    {
+      "offered_rps": 200,
+      "sent": 6001,
+      "achieved_rps": 200.0,
+      "ok_rps": 200.0,
+      "error_pct": 0.0,
+      "status": {
+        "200": 6001,
+        "429": 0,
+        "502": 0,
+        "503": 0,
+        "504": 0,
+        "0": 0
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 212.404,
+        "p95": 215.449,
+        "p99": 222.849,
+        "max": 266.628,
+        "count": 6001
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 0.544,
+        "p95": 1.267,
+        "p99": 2.62,
+        "at_least": [],
+        "count": 5966
+      },
+      "server_ttft_ms": null,
+      "shed": 0
+    },
+    {
+      "offered_rps": 300,
+      "sent": 9001,
+      "achieved_rps": 300.0,
+      "ok_rps": 300.0,
+      "error_pct": 0.0,
+      "status": {
+        "200": 9001,
+        "429": 0,
+        "502": 0,
+        "503": 0,
+        "504": 0,
+        "0": 0
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 213.209,
+        "p95": 224.615,
+        "p99": 259.248,
+        "max": 374.474,
+        "count": 9001
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 0.708,
+        "p95": 3.357,
+        "p99": 12.569,
+        "at_least": [],
+        "count": 8969
+      },
+      "server_ttft_ms": null,
+      "shed": 0
+    },
+    {
+      "offered_rps": 400,
+      "sent": 10439,
+      "achieved_rps": 348.0,
+      "ok_rps": 279.8,
+      "error_pct": 19.59,
+      "status": {
+        "200": 8394,
+        "429": 0,
+        "502": 0,
+        "503": 2045,
+        "504": 0,
+        "0": 0
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 3277.615,
+        "p95": 8742.128,
+        "p99": 11346.179,
+        "max": 17943.55,
+        "count": 8394
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 62.07,
+        "p95": 159.936,
+        "p99": 275.432,
+        "at_least": [],
+        "count": 7276
+      },
+      "server_ttft_ms": null,
+      "shed": 1991
+    },
+    {
+      "offered_rps": 500,
+      "sent": 14424,
+      "achieved_rps": 480.8,
+      "ok_rps": 221.8,
+      "error_pct": 53.88,
+      "status": {
+        "200": 6653,
+        "429": 0,
+        "502": 0,
+        "503": 7771,
+        "504": 0,
+        "0": 0
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 1813.256,
+        "p95": 6091.656,
+        "p99": 11067.554,
+        "max": 17963.66,
+        "count": 6653
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 87.054,
+        "p95": 274.488,
+        "p99": 640.824,
+        "at_least": [],
+        "count": 7206
+      },
+      "server_ttft_ms": null,
+      "shed": 7765
+    },
+    {
+      "offered_rps": 600,
+      "sent": 16737,
+      "achieved_rps": 557.9,
+      "ok_rps": 191.9,
+      "error_pct": 65.6,
+      "status": {
+        "200": 5758,
+        "429": 0,
+        "502": 0,
+        "503": 10979,
+        "504": 0,
+        "0": 0
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 1644.412,
+        "p95": 7570.101,
+        "p99": 22591.99,
+        "max": 25450.807,
+        "count": 5758
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 101.116,
+        "p95": 335.694,
+        "p99": 467.139,
+        "at_least": [],
+        "count": 5823
+      },
+      "server_ttft_ms": null,
+      "shed": 10987
+    },
+    {
+      "offered_rps": 800,
+      "sent": 22635,
+      "achieved_rps": 754.5,
+      "ok_rps": 186.2,
+      "error_pct": 75.32,
+      "status": {
+        "200": 5586,
+        "429": 0,
+        "502": 0,
+        "503": 17049,
+        "504": 0,
+        "0": 0
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 1956.687,
+        "p95": 6577.588,
+        "p99": 20369.447,
+        "max": 24145.559,
+        "count": 5586
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 137.152,
+        "p95": 342.604,
+        "p99": 468.957,
+        "at_least": [],
+        "count": 5787
+      },
+      "server_ttft_ms": null,
+      "shed": 16987
+    },
+    {
+      "offered_rps": 1000,
+      "sent": 26544,
+      "achieved_rps": 884.8,
+      "ok_rps": 205.8,
+      "error_pct": 76.74,
+      "status": {
+        "200": 6175,
+        "429": 0,
+        "502": 0,
+        "503": 19870,
+        "504": 0,
+        "0": 499
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 2063.175,
+        "p95": 28874.919,
+        "p99": 29918.758,
+        "max": 30000.613,
+        "count": 6175
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 151.384,
+        "p95": 425.456,
+        "p99": 485.091,
+        "at_least": [],
+        "count": 5397
+      },
+      "server_ttft_ms": null,
+      "shed": 19827
+    }
+  ],
+  "headline": {
+    "max_sustainable_rps": 300,
+    "at_max": {
+      "offered_rps": 300,
+      "sent": 9001,
+      "achieved_rps": 300.0,
+      "ok_rps": 300.0,
+      "error_pct": 0.0,
+      "status": {
+        "200": 9001,
+        "429": 0,
+        "502": 0,
+        "503": 0,
+        "504": 0,
+        "0": 0
+      },
+      "dropped_iterations": 0,
+      "latency_ms": {
+        "p50": 213.209,
+        "p95": 224.615,
+        "p99": 259.248,
+        "max": 374.474,
+        "count": 9001
+      },
+      "ttfb_ms": null,
+      "server_overhead_ms": {
+        "p50": 0.708,
+        "p95": 3.357,
+        "p99": 12.569,
+        "at_least": [],
+        "count": 8969
+      },
+      "server_ttft_ms": null,
+      "shed": 0
+    },
+    "first_unsustainable_rps": 400,
+    "peak_successful_rps": 300.0
+  }
+}

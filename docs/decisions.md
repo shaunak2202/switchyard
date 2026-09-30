@@ -338,3 +338,116 @@ mode still exists (`verifier_model: null`) but logs a warning at startup.
 - **Dashboards as code.** `scripts/build_dashboard.py` generates the provisioned Grafana JSON.
   CI fails if the committed JSON is stale, and a check during development confirmed every panel
   query is valid PromQL.
+
+---
+
+## ADR-018: Connection hygiene: file-descriptor limits and keep-alive ordering
+
+**Date:** 2026-09-29 · **Status:** accepted
+
+**Context.** The first load tests returned transport errors (`EOF`) even when k6 talked to the
+mock *directly*, at a load the mock handled easily. There were two causes:
+1. Docker's default soft `nofile` limit is 1024. k6's open-model executor spreads requests over
+   many VUs, each holding its own keep-alive connection, so the server ran out of descriptors
+   and refused new connections.
+2. uvicorn closes idle connections after 5 s, and httpx's pool also expires them after 5 s. A
+   request is sometimes written onto a connection at the instant the server closes it. At the
+   gateway→provider hop that looks like a dropped connection, so it triggered retries and
+   failovers that had nothing to do with provider health.
+
+**Decision.** Containers run with `nofile` 65536. Servers keep idle connections for 75 s
+(`--timeout-keep-alive 75`, the usual value behind load balancers). The gateway's upstream pools
+expire idle connections after `keepalive_expiry_s` (default 4 s), which must stay **shorter than
+the upstream's** idle timeout, so the client always gives up a connection first.
+
+**Consequences.** Real providers publish their idle timeouts inconsistently.
+`keepalive_expiry_s` is configurable per provider for that reason, and it errs short: a new
+connection costs one TCP (+TLS) handshake, while a race costs a failed request.
+
+---
+
+## ADR-019: Shard each provider's httpx pool behind semaphores
+
+**Date:** 2026-09-29 · **Status:** accepted
+
+**Context.** Past about 250 req/s the gateway pinned its core, and throughput *fell* as
+offered load rose. A py-spy profile under load put 57% of CPU inside httpx, most of it in
+httpcore's connection-pool bookkeeping (`_assign_requests_to_connections`, `is_idle`,
+`has_expired`). On every request start and finish the pool rescans all of its connections and
+all queued requests, so per-request CPU grows with pool size × queue length. More load meant
+more queued requests, which made every request more expensive, which queued more requests:
+congestion collapse.
+
+**Decision.** Each provider's `max_connections` is split across `pool_shards` (default 8)
+independent `httpx.AsyncClient`s, and each request goes to the least-loaded shard. Each shard is
+guarded by a semaphore sized to its pool, so httpcore's own queue stays empty: excess requests
+wait on an O(1) semaphore instead of a list that is rescanned. `pool_shards: 1` restores the old
+behaviour, and the load tests run both.
+
+**Consequences.** In the saved ramp runs the single-pool configuration sustains 200 req/s, and
+at 300 req/s its p50 rises to seconds, while the sharded pool sustains 300 req/s with a p99 in
+the mid-200 ms range (`results/loadtest/*ramp__single-httpx-pool`, `*ramp__no-shedding`). The
+right long-term fix is a client that doesn't rescan its pool per request; sharding keeps the
+stack choice (httpx) and removes the pathology.
+
+---
+
+## ADR-020: Shed load on event-loop lag
+
+**Date:** 2026-09-29 · **Status:** accepted, with a known limitation
+
+**Context.** An asyncio server has no thread pool to exhaust: when it is CPU-bound, work piles up
+in the ready queue and everything slows down. The ramp without shedding showed a worse effect.
+The saturated gateway read upstream responses too late, its own first-byte timeouts fired, and
+the circuit breakers blamed the *healthy* mocks. The saved no-shedding run logs thousands of
+"timeouts" and repeated breaker trips on both mocks. The gateway's overload turned into a
+self-inflicted provider outage (`503 all_circuits_open`).
+
+**Decision.** A probe measures event-loop lag (how late a 50 ms timer fires), smoothed with a
+~0.5 s time constant. Above `max_loop_lag_ms` (50), new chat requests get `503
+gateway_overloaded` + `Retry-After: 1` before any real work. Health, readiness and metrics
+endpoints are never shed. A first version (20 ms probes, smoothing 0.3, 25 ms threshold) shed
+on transients such as a burst of simultaneous arrivals and first-use imports, so it was slowed
+down.
+
+**Consequences.** Past saturation, shedding roughly doubles goodput compared with no shedding,
+and the breakers stay closed (compare `*ramp__default` and `*ramp__no-shedding` at 800 and 1000
+req/s). **It does not keep admitted requests fast:** their p50 still reaches seconds, because
+accepting and rejecting connections still costs loop time, and the lag signal trails the queue
+it measures. Doing better needs admission *before* the event loop: a concurrency limit at the
+server or load balancer, or more gateway processes behind one.
+
+---
+
+## ADR-021: Semantic tier: micro-batched, latency-budgeted, and off by default
+
+**Date:** 2026-09-29 · **Status:** accepted
+
+**Context.** ADR-016 chose a two-stage semantic match (embedding candidate, cross-encoder
+verification) using latencies measured *natively on the host*. Inside the Linux container the
+same models ran an order of magnitude slower, because the arm64 VM has no access to the host's
+matrix hardware. Under steady load every cache miss queued behind the single model thread, and
+misses took seconds.
+
+**Decision.**
+- Both models run through a `MicroBatcher`. Concurrent calls share one forward pass, and batch
+  size adapts to load.
+- The semantic tier has a latency budget (`lookup_budget_ms`, 50) and a queue limit
+  (`max_queue`). A lookup that would exceed either is skipped and counted as a miss
+  (`switchyard_cache_semantic_skipped_total`). The cache must never make a request slower than
+  going upstream.
+- **The tier ships disabled.** The steady-load runs (`results/loadtest/*steady*`) measure it at
+  200 req/s. With it on, the miss p50 rises by tens of milliseconds, most lookups exceed their
+  budget, and semantic hits are a hundredth of a percent of traffic. The exact tier alone serves
+  about three quarters of the same traffic with sub-millisecond p50 hits. Raising the budget to
+  250 ms admits a few more semantic hits, makes every miss slower still, and **costs
+  reliability**. More inference work in flight competes with the event loop for CPU and the GIL
+  (smoothed loop lag rose from under 1 ms to over 10 ms in that run), so Redis calls hit their
+  0.5 s timeout and a few provider first-byte deadlines were missed: requests failed with 503
+  although nothing downstream was broken. Running the models in-process is the root problem;
+  a separate inference service would isolate them.
+
+**Consequences.** The mechanism, its evaluation and its safety threshold stay in the codebase,
+and are one config flag away. The tier is worth enabling where one upstream call costs seconds
+and the models have faster inference (GPU, ONNX Runtime, or native Apple silicon), not in front
+of a ~210 ms mock on a CPU-only VM.

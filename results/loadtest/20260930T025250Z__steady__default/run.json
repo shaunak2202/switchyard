@@ -1,0 +1,24 @@
+{
+  "scenario": "steady",
+  "variant": "default",
+  "script": "steady.js",
+  "env": {
+    "RATE": "200",
+    "DURATION": "180s",
+    "TARGET": "http://gateway:8000"
+  },
+  "key_limits": {
+    "rpm": 100000000,
+    "tpm": 1000000000000
+  },
+  "window": {
+    "start": 1790736783.314087,
+    "end": 1790736964.0988932
+  },
+  "git": {
+    "sha": "a1c349a288f43aebc0114969e5add397dc1f086e",
+    "dirty": true
+  },
+  "command": "loadtest/run.py all",
+  "k6_command": "docker run --rm --network switchyard_default --cpus 2 -v /Users/shaunak/Projects/Switchyard/loadtest:/scripts:ro -v /Users/shaunak/Projects/Switchyard/results/loadtest/20260930T025250Z__steady__default:/out -e K6_CSV_TIME_FORMAT=unix_milli -e RATE=200 -e DURATION=180s -e API_KEY=<redacted> -e TARGET=http://gateway:8000 grafana/k6:1.2.2 run --quiet /scripts/steady.js"
+}

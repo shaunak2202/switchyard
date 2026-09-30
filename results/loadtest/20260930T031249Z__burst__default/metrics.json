@@ -1,0 +1,28 @@
+{
+  "scenario": "burst",
+  "variant": "default",
+  "headline": {
+    "key_rpm": 300,
+    "burst_sent": 2000,
+    "burst_admitted": 304,
+    "bucket_capacity": 300,
+    "sustain_admitted_per_s": 5.0,
+    "refill_per_s": 5.0,
+    "total_admitted": 649,
+    "theoretical_max_admitted": 650,
+    "max_excess_over_bound": -0.05,
+    "other_status": []
+  },
+  "latency_ms": {
+    "admitted": {
+      "p50": 139.503204,
+      "p99": 446.860095,
+      "count": 649
+    },
+    "rejected_429": {
+      "p50": 2.322266,
+      "p99": 185.794096,
+      "count": 4352
+    }
+  }
+}

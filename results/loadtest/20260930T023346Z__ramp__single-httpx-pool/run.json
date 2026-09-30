@@ -1,0 +1,25 @@
+{
+  "scenario": "ramp",
+  "variant": "single-httpx-pool",
+  "script": "ramp.js",
+  "env": {
+    "STEPS": "50,100,200,300,400,500,600,800,1000",
+    "STEP_SECONDS": "30",
+    "GAP_SECONDS": "10",
+    "TARGET": "http://gateway:8000"
+  },
+  "key_limits": {
+    "rpm": 100000000,
+    "tpm": 1000000000000
+  },
+  "window": {
+    "start": 1790735640.022731,
+    "end": 1790736016.75207
+  },
+  "git": {
+    "sha": "a1c349a288f43aebc0114969e5add397dc1f086e",
+    "dirty": true
+  },
+  "command": "loadtest/run.py all",
+  "k6_command": "docker run --rm --network switchyard_default --cpus 2 -v /Users/shaunak/Projects/Switchyard/loadtest:/scripts:ro -v /Users/shaunak/Projects/Switchyard/results/loadtest/20260930T023346Z__ramp__single-httpx-pool:/out -e K6_CSV_TIME_FORMAT=unix_milli -e STEPS=50,100,200,300,400,500,600,800,1000 -e STEP_SECONDS=30 -e GAP_SECONDS=10 -e API_KEY=<redacted> -e TARGET=http://gateway:8000 grafana/k6:1.2.2 run --quiet /scripts/ramp.js"
+}

@@ -1,0 +1,30 @@
+{
+  "mock-primary": {
+    "ttft_ms": 50.0,
+    "ttft_jitter_ms": 0.0,
+    "inter_token_ms": 5.0,
+    "output_tokens": 32,
+    "error_rate": 0.0,
+    "error_status": 500,
+    "timeout_rate": 0.0,
+    "hang_s": 600.0,
+    "stream_abort_rate": 0.0,
+    "stream_stall_rate": 0.0,
+    "fail_after_tokens": 5,
+    "seed": null
+  },
+  "mock-secondary": {
+    "ttft_ms": 50.0,
+    "ttft_jitter_ms": 0.0,
+    "inter_token_ms": 5.0,
+    "output_tokens": 32,
+    "error_rate": 0.0,
+    "error_status": 500,
+    "timeout_rate": 0.0,
+    "hang_s": 600.0,
+    "stream_abort_rate": 0.0,
+    "stream_stall_rate": 0.0,
+    "fail_after_tokens": 5,
+    "seed": null
+  }
+}

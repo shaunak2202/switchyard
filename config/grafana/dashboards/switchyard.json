@@ -110,6 +110,8 @@
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit",
+          "min": 0,
+          "max": 1,
           "custom": {
             "drawStyle": "line",
             "lineWidth": 1,
@@ -538,6 +540,8 @@
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit",
+          "min": 0,
+          "max": 1,
           "custom": {
             "drawStyle": "line",
             "lineWidth": 1,

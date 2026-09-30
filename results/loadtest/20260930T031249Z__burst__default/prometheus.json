@@ -1,0 +1,5324 @@
+{
+ "start": 1790737971.939587,
+ "end": 1790738062.3475971,
+ "step": 5,
+ "series": {
+  "requests": [
+   {
+    "labels": {
+     "__name__": "switchyard_requests_total",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "route": "mock",
+     "status": "200",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_requests_total",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "route": "mock",
+     "status": "200",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_requests_total",
+     "cache": "none",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "route": "mock",
+     "status": "429",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737991.94,
+      1696.0
+     ],
+     [
+      1790737996.94,
+      1696.0
+     ],
+     [
+      1790738001.94,
+      1870.0
+     ],
+     [
+      1790738006.94,
+      2095.0
+     ],
+     [
+      1790738011.94,
+      2320.0
+     ],
+     [
+      1790738016.94,
+      2545.0
+     ],
+     [
+      1790738021.94,
+      2770.0
+     ],
+     [
+      1790738026.94,
+      2995.0
+     ],
+     [
+      1790738031.94,
+      3220.0
+     ],
+     [
+      1790738036.94,
+      3445.0
+     ],
+     [
+      1790738041.94,
+      3670.0
+     ],
+     [
+      1790738046.94,
+      3895.0
+     ],
+     [
+      1790738051.94,
+      4120.0
+     ],
+     [
+      1790738056.94,
+      4345.0
+     ],
+     [
+      1790738061.94,
+      4352.0
+     ]
+    ]
+   }
+  ],
+  "overhead_bucket": [
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "+Inf",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "+Inf",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0001",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0001",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.00025",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      150.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.00025",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0005",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      6597.0
+     ],
+     [
+      1790737991.94,
+      2.0
+     ],
+     [
+      1790737996.94,
+      2.0
+     ],
+     [
+      1790738001.94,
+      22.0
+     ],
+     [
+      1790738006.94,
+      29.0
+     ],
+     [
+      1790738011.94,
+      36.0
+     ],
+     [
+      1790738016.94,
+      46.0
+     ],
+     [
+      1790738021.94,
+      55.0
+     ],
+     [
+      1790738026.94,
+      55.0
+     ],
+     [
+      1790738031.94,
+      56.0
+     ],
+     [
+      1790738036.94,
+      61.0
+     ],
+     [
+      1790738041.94,
+      64.0
+     ],
+     [
+      1790738046.94,
+      66.0
+     ],
+     [
+      1790738051.94,
+      67.0
+     ],
+     [
+      1790738056.94,
+      70.0
+     ],
+     [
+      1790738061.94,
+      71.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0005",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      3965.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.00075",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8074.0
+     ],
+     [
+      1790737991.94,
+      2.0
+     ],
+     [
+      1790737996.94,
+      2.0
+     ],
+     [
+      1790738001.94,
+      39.0
+     ],
+     [
+      1790738006.94,
+      56.0
+     ],
+     [
+      1790738011.94,
+      80.0
+     ],
+     [
+      1790738016.94,
+      100.0
+     ],
+     [
+      1790738021.94,
+      119.0
+     ],
+     [
+      1790738026.94,
+      126.0
+     ],
+     [
+      1790738031.94,
+      136.0
+     ],
+     [
+      1790738036.94,
+      145.0
+     ],
+     [
+      1790738041.94,
+      151.0
+     ],
+     [
+      1790738046.94,
+      158.0
+     ],
+     [
+      1790738051.94,
+      162.0
+     ],
+     [
+      1790738056.94,
+      166.0
+     ],
+     [
+      1790738061.94,
+      167.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.00075",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      6738.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.001",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8538.0
+     ],
+     [
+      1790737991.94,
+      2.0
+     ],
+     [
+      1790737996.94,
+      2.0
+     ],
+     [
+      1790738001.94,
+      48.0
+     ],
+     [
+      1790738006.94,
+      66.0
+     ],
+     [
+      1790738011.94,
+      91.0
+     ],
+     [
+      1790738016.94,
+      115.0
+     ],
+     [
+      1790738021.94,
+      139.0
+     ],
+     [
+      1790738026.94,
+      148.0
+     ],
+     [
+      1790738031.94,
+      162.0
+     ],
+     [
+      1790738036.94,
+      173.0
+     ],
+     [
+      1790738041.94,
+      186.0
+     ],
+     [
+      1790738046.94,
+      196.0
+     ],
+     [
+      1790738051.94,
+      204.0
+     ],
+     [
+      1790738056.94,
+      211.0
+     ],
+     [
+      1790738061.94,
+      212.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.001",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      7913.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0015",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8854.0
+     ],
+     [
+      1790737991.94,
+      4.0
+     ],
+     [
+      1790737996.94,
+      4.0
+     ],
+     [
+      1790738001.94,
+      65.0
+     ],
+     [
+      1790738006.94,
+      88.0
+     ],
+     [
+      1790738011.94,
+      113.0
+     ],
+     [
+      1790738016.94,
+      138.0
+     ],
+     [
+      1790738021.94,
+      162.0
+     ],
+     [
+      1790738026.94,
+      176.0
+     ],
+     [
+      1790738031.94,
+      196.0
+     ],
+     [
+      1790738036.94,
+      210.0
+     ],
+     [
+      1790738041.94,
+      227.0
+     ],
+     [
+      1790738046.94,
+      244.0
+     ],
+     [
+      1790738051.94,
+      261.0
+     ],
+     [
+      1790738056.94,
+      274.0
+     ],
+     [
+      1790738061.94,
+      275.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0015",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8680.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.002",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8938.0
+     ],
+     [
+      1790737991.94,
+      86.0
+     ],
+     [
+      1790737996.94,
+      86.0
+     ],
+     [
+      1790738001.94,
+      154.0
+     ],
+     [
+      1790738006.94,
+      179.0
+     ],
+     [
+      1790738011.94,
+      204.0
+     ],
+     [
+      1790738016.94,
+      229.0
+     ],
+     [
+      1790738021.94,
+      254.0
+     ],
+     [
+      1790738026.94,
+      274.0
+     ],
+     [
+      1790738031.94,
+      295.0
+     ],
+     [
+      1790738036.94,
+      316.0
+     ],
+     [
+      1790738041.94,
+      340.0
+     ],
+     [
+      1790738046.94,
+      363.0
+     ],
+     [
+      1790738051.94,
+      385.0
+     ],
+     [
+      1790738056.94,
+      408.0
+     ],
+     [
+      1790738061.94,
+      409.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.002",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8868.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.003",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8993.0
+     ],
+     [
+      1790737991.94,
+      116.0
+     ],
+     [
+      1790737996.94,
+      116.0
+     ],
+     [
+      1790738001.94,
+      185.0
+     ],
+     [
+      1790738006.94,
+      210.0
+     ],
+     [
+      1790738011.94,
+      235.0
+     ],
+     [
+      1790738016.94,
+      260.0
+     ],
+     [
+      1790738021.94,
+      285.0
+     ],
+     [
+      1790738026.94,
+      310.0
+     ],
+     [
+      1790738031.94,
+      335.0
+     ],
+     [
+      1790738036.94,
+      358.0
+     ],
+     [
+      1790738041.94,
+      383.0
+     ],
+     [
+      1790738046.94,
+      408.0
+     ],
+     [
+      1790738051.94,
+      432.0
+     ],
+     [
+      1790738056.94,
+      457.0
+     ],
+     [
+      1790738061.94,
+      458.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.003",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8949.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.004",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9011.0
+     ],
+     [
+      1790737991.94,
+      127.0
+     ],
+     [
+      1790737996.94,
+      127.0
+     ],
+     [
+      1790738001.94,
+      196.0
+     ],
+     [
+      1790738006.94,
+      221.0
+     ],
+     [
+      1790738011.94,
+      246.0
+     ],
+     [
+      1790738016.94,
+      271.0
+     ],
+     [
+      1790738021.94,
+      296.0
+     ],
+     [
+      1790738026.94,
+      321.0
+     ],
+     [
+      1790738031.94,
+      346.0
+     ],
+     [
+      1790738036.94,
+      371.0
+     ],
+     [
+      1790738041.94,
+      396.0
+     ],
+     [
+      1790738046.94,
+      421.0
+     ],
+     [
+      1790738051.94,
+      446.0
+     ],
+     [
+      1790738056.94,
+      471.0
+     ],
+     [
+      1790738061.94,
+      472.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.004",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8962.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.005",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9019.0
+     ],
+     [
+      1790737991.94,
+      135.0
+     ],
+     [
+      1790737996.94,
+      135.0
+     ],
+     [
+      1790738001.94,
+      204.0
+     ],
+     [
+      1790738006.94,
+      229.0
+     ],
+     [
+      1790738011.94,
+      254.0
+     ],
+     [
+      1790738016.94,
+      279.0
+     ],
+     [
+      1790738021.94,
+      304.0
+     ],
+     [
+      1790738026.94,
+      329.0
+     ],
+     [
+      1790738031.94,
+      354.0
+     ],
+     [
+      1790738036.94,
+      379.0
+     ],
+     [
+      1790738041.94,
+      404.0
+     ],
+     [
+      1790738046.94,
+      429.0
+     ],
+     [
+      1790738051.94,
+      454.0
+     ],
+     [
+      1790738056.94,
+      479.0
+     ],
+     [
+      1790738061.94,
+      480.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.005",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8967.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0075",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9021.0
+     ],
+     [
+      1790737991.94,
+      137.0
+     ],
+     [
+      1790737996.94,
+      137.0
+     ],
+     [
+      1790738001.94,
+      206.0
+     ],
+     [
+      1790738006.94,
+      231.0
+     ],
+     [
+      1790738011.94,
+      256.0
+     ],
+     [
+      1790738016.94,
+      281.0
+     ],
+     [
+      1790738021.94,
+      306.0
+     ],
+     [
+      1790738026.94,
+      331.0
+     ],
+     [
+      1790738031.94,
+      356.0
+     ],
+     [
+      1790738036.94,
+      381.0
+     ],
+     [
+      1790738041.94,
+      406.0
+     ],
+     [
+      1790738046.94,
+      431.0
+     ],
+     [
+      1790738051.94,
+      456.0
+     ],
+     [
+      1790738056.94,
+      481.0
+     ],
+     [
+      1790738061.94,
+      482.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0075",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8973.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.01",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9022.0
+     ],
+     [
+      1790737991.94,
+      137.0
+     ],
+     [
+      1790737996.94,
+      137.0
+     ],
+     [
+      1790738001.94,
+      206.0
+     ],
+     [
+      1790738006.94,
+      231.0
+     ],
+     [
+      1790738011.94,
+      256.0
+     ],
+     [
+      1790738016.94,
+      281.0
+     ],
+     [
+      1790738021.94,
+      306.0
+     ],
+     [
+      1790738026.94,
+      331.0
+     ],
+     [
+      1790738031.94,
+      356.0
+     ],
+     [
+      1790738036.94,
+      381.0
+     ],
+     [
+      1790738041.94,
+      406.0
+     ],
+     [
+      1790738046.94,
+      431.0
+     ],
+     [
+      1790738051.94,
+      456.0
+     ],
+     [
+      1790738056.94,
+      481.0
+     ],
+     [
+      1790738061.94,
+      482.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.01",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8973.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.015",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9024.0
+     ],
+     [
+      1790737991.94,
+      139.0
+     ],
+     [
+      1790737996.94,
+      139.0
+     ],
+     [
+      1790738001.94,
+      208.0
+     ],
+     [
+      1790738006.94,
+      233.0
+     ],
+     [
+      1790738011.94,
+      258.0
+     ],
+     [
+      1790738016.94,
+      283.0
+     ],
+     [
+      1790738021.94,
+      308.0
+     ],
+     [
+      1790738026.94,
+      333.0
+     ],
+     [
+      1790738031.94,
+      358.0
+     ],
+     [
+      1790738036.94,
+      383.0
+     ],
+     [
+      1790738041.94,
+      408.0
+     ],
+     [
+      1790738046.94,
+      433.0
+     ],
+     [
+      1790738051.94,
+      458.0
+     ],
+     [
+      1790738056.94,
+      483.0
+     ],
+     [
+      1790738061.94,
+      484.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.015",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8973.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.02",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9025.0
+     ],
+     [
+      1790737991.94,
+      158.0
+     ],
+     [
+      1790737996.94,
+      158.0
+     ],
+     [
+      1790738001.94,
+      227.0
+     ],
+     [
+      1790738006.94,
+      252.0
+     ],
+     [
+      1790738011.94,
+      277.0
+     ],
+     [
+      1790738016.94,
+      302.0
+     ],
+     [
+      1790738021.94,
+      327.0
+     ],
+     [
+      1790738026.94,
+      352.0
+     ],
+     [
+      1790738031.94,
+      377.0
+     ],
+     [
+      1790738036.94,
+      402.0
+     ],
+     [
+      1790738041.94,
+      427.0
+     ],
+     [
+      1790738046.94,
+      452.0
+     ],
+     [
+      1790738051.94,
+      477.0
+     ],
+     [
+      1790738056.94,
+      502.0
+     ],
+     [
+      1790738061.94,
+      503.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.02",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8973.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.03",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      187.0
+     ],
+     [
+      1790737996.94,
+      187.0
+     ],
+     [
+      1790738001.94,
+      256.0
+     ],
+     [
+      1790738006.94,
+      281.0
+     ],
+     [
+      1790738011.94,
+      306.0
+     ],
+     [
+      1790738016.94,
+      331.0
+     ],
+     [
+      1790738021.94,
+      356.0
+     ],
+     [
+      1790738026.94,
+      381.0
+     ],
+     [
+      1790738031.94,
+      406.0
+     ],
+     [
+      1790738036.94,
+      431.0
+     ],
+     [
+      1790738041.94,
+      456.0
+     ],
+     [
+      1790738046.94,
+      481.0
+     ],
+     [
+      1790738051.94,
+      506.0
+     ],
+     [
+      1790738056.94,
+      531.0
+     ],
+     [
+      1790738061.94,
+      532.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.03",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8973.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.05",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      214.0
+     ],
+     [
+      1790737996.94,
+      214.0
+     ],
+     [
+      1790738001.94,
+      283.0
+     ],
+     [
+      1790738006.94,
+      308.0
+     ],
+     [
+      1790738011.94,
+      333.0
+     ],
+     [
+      1790738016.94,
+      358.0
+     ],
+     [
+      1790738021.94,
+      383.0
+     ],
+     [
+      1790738026.94,
+      408.0
+     ],
+     [
+      1790738031.94,
+      433.0
+     ],
+     [
+      1790738036.94,
+      458.0
+     ],
+     [
+      1790738041.94,
+      483.0
+     ],
+     [
+      1790738046.94,
+      508.0
+     ],
+     [
+      1790738051.94,
+      533.0
+     ],
+     [
+      1790738056.94,
+      558.0
+     ],
+     [
+      1790738061.94,
+      559.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.05",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.1",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      270.0
+     ],
+     [
+      1790737996.94,
+      270.0
+     ],
+     [
+      1790738001.94,
+      339.0
+     ],
+     [
+      1790738006.94,
+      364.0
+     ],
+     [
+      1790738011.94,
+      389.0
+     ],
+     [
+      1790738016.94,
+      414.0
+     ],
+     [
+      1790738021.94,
+      439.0
+     ],
+     [
+      1790738026.94,
+      464.0
+     ],
+     [
+      1790738031.94,
+      489.0
+     ],
+     [
+      1790738036.94,
+      514.0
+     ],
+     [
+      1790738041.94,
+      539.0
+     ],
+     [
+      1790738046.94,
+      564.0
+     ],
+     [
+      1790738051.94,
+      589.0
+     ],
+     [
+      1790738056.94,
+      614.0
+     ],
+     [
+      1790738061.94,
+      615.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.1",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.25",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.25",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.5",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.5",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "1.0",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_gateway_overhead_seconds_bucket",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "1.0",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   }
+  ],
+  "ttft_bucket": [
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "+Inf",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.001",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0025",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.005",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.0075",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.01",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.025",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.05",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      57.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.075",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8967.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.1",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.15",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.2",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.3",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.5",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "0.75",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "1.0",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "1.5",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "10.0",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "2.0",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "20.0",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "3.0",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "30.0",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "5.0",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "60.0",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_time_to_first_token_seconds_bucket",
+     "cache": "bypass",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "le": "7.5",
+     "route": "mock"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   }
+  ],
+  "duration_bucket": [
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "+Inf",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "+Inf",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.001",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.001",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.0025",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.0025",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.005",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.005",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.0075",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.0075",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.01",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.01",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.025",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.025",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.05",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.05",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.075",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.075",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      64.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.1",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.1",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      64.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.15",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      9.0
+     ],
+     [
+      1790737996.94,
+      9.0
+     ],
+     [
+      1790738001.94,
+      78.0
+     ],
+     [
+      1790738006.94,
+      103.0
+     ],
+     [
+      1790738011.94,
+      128.0
+     ],
+     [
+      1790738016.94,
+      153.0
+     ],
+     [
+      1790738021.94,
+      178.0
+     ],
+     [
+      1790738026.94,
+      203.0
+     ],
+     [
+      1790738031.94,
+      228.0
+     ],
+     [
+      1790738036.94,
+      253.0
+     ],
+     [
+      1790738041.94,
+      278.0
+     ],
+     [
+      1790738046.94,
+      303.0
+     ],
+     [
+      1790738051.94,
+      328.0
+     ],
+     [
+      1790738056.94,
+      353.0
+     ],
+     [
+      1790738061.94,
+      354.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.15",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      64.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.2",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      163.0
+     ],
+     [
+      1790737996.94,
+      163.0
+     ],
+     [
+      1790738001.94,
+      232.0
+     ],
+     [
+      1790738006.94,
+      257.0
+     ],
+     [
+      1790738011.94,
+      282.0
+     ],
+     [
+      1790738016.94,
+      307.0
+     ],
+     [
+      1790738021.94,
+      332.0
+     ],
+     [
+      1790738026.94,
+      357.0
+     ],
+     [
+      1790738031.94,
+      382.0
+     ],
+     [
+      1790738036.94,
+      407.0
+     ],
+     [
+      1790738041.94,
+      432.0
+     ],
+     [
+      1790738046.94,
+      457.0
+     ],
+     [
+      1790738051.94,
+      482.0
+     ],
+     [
+      1790738056.94,
+      507.0
+     ],
+     [
+      1790738061.94,
+      508.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.2",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      64.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.3",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      266.0
+     ],
+     [
+      1790737996.94,
+      266.0
+     ],
+     [
+      1790738001.94,
+      335.0
+     ],
+     [
+      1790738006.94,
+      360.0
+     ],
+     [
+      1790738011.94,
+      385.0
+     ],
+     [
+      1790738016.94,
+      410.0
+     ],
+     [
+      1790738021.94,
+      435.0
+     ],
+     [
+      1790738026.94,
+      460.0
+     ],
+     [
+      1790738031.94,
+      485.0
+     ],
+     [
+      1790738036.94,
+      510.0
+     ],
+     [
+      1790738041.94,
+      535.0
+     ],
+     [
+      1790738046.94,
+      560.0
+     ],
+     [
+      1790738051.94,
+      585.0
+     ],
+     [
+      1790738056.94,
+      610.0
+     ],
+     [
+      1790738061.94,
+      611.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.3",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.5",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.5",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.75",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "0.75",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "1.0",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "1.0",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "1.5",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "1.5",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "10.0",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "10.0",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "2.0",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "2.0",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "20.0",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "20.0",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "3.0",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "3.0",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "30.0",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "30.0",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "5.0",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "5.0",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "60.0",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "60.0",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "7.5",
+     "stream": "false"
+    },
+    "values": [
+     [
+      1790737971.94,
+      9027.0
+     ],
+     [
+      1790737991.94,
+      304.0
+     ],
+     [
+      1790737996.94,
+      304.0
+     ],
+     [
+      1790738001.94,
+      373.0
+     ],
+     [
+      1790738006.94,
+      398.0
+     ],
+     [
+      1790738011.94,
+      423.0
+     ],
+     [
+      1790738016.94,
+      448.0
+     ],
+     [
+      1790738021.94,
+      473.0
+     ],
+     [
+      1790738026.94,
+      498.0
+     ],
+     [
+      1790738031.94,
+      523.0
+     ],
+     [
+      1790738036.94,
+      548.0
+     ],
+     [
+      1790738041.94,
+      573.0
+     ],
+     [
+      1790738046.94,
+      598.0
+     ],
+     [
+      1790738051.94,
+      623.0
+     ],
+     [
+      1790738056.94,
+      648.0
+     ],
+     [
+      1790738061.94,
+      649.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "cache": "bypass",
+     "le": "7.5",
+     "stream": "true"
+    },
+    "values": [
+     [
+      1790737971.94,
+      8974.0
+     ]
+    ]
+   }
+  ],
+  "cache_lookups": [],
+  "semantic_rejections": [
+   {
+    "labels": {
+     "__name__": "switchyard_cache_semantic_rejections_total",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737976.94,
+      0.0
+     ],
+     [
+      1790737981.94,
+      0.0
+     ],
+     [
+      1790737986.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   }
+  ],
+  "failovers": [
+   {
+    "labels": {
+     "__name__": "switchyard_failovers_total",
+     "from_provider": "mock-primary",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "to_provider": "mock-secondary"
+    },
+    "values": [
+     [
+      1790737971.94,
+      6125.0
+     ]
+    ]
+   }
+  ],
+  "circuit_state": [
+   {
+    "labels": {
+     "__name__": "switchyard_circuit_state",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "provider": "mock-primary"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737976.94,
+      0.0
+     ],
+     [
+      1790737981.94,
+      0.0
+     ],
+     [
+      1790737986.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_circuit_state",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "provider": "mock-secondary"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737976.94,
+      0.0
+     ],
+     [
+      1790737981.94,
+      0.0
+     ],
+     [
+      1790737986.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   },
+   {
+    "labels": {
+     "__name__": "switchyard_circuit_state",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "provider": "ollama"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737976.94,
+      0.0
+     ],
+     [
+      1790737981.94,
+      0.0
+     ],
+     [
+      1790737986.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   }
+  ],
+  "upstream_errors": [],
+  "shed": [
+   {
+    "labels": {
+     "__name__": "switchyard_load_shed_total",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737976.94,
+      0.0
+     ],
+     [
+      1790737981.94,
+      0.0
+     ],
+     [
+      1790737986.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      0.0
+     ],
+     [
+      1790738006.94,
+      0.0
+     ],
+     [
+      1790738011.94,
+      0.0
+     ],
+     [
+      1790738016.94,
+      0.0
+     ],
+     [
+      1790738021.94,
+      0.0
+     ],
+     [
+      1790738026.94,
+      0.0
+     ],
+     [
+      1790738031.94,
+      0.0
+     ],
+     [
+      1790738036.94,
+      0.0
+     ],
+     [
+      1790738041.94,
+      0.0
+     ],
+     [
+      1790738046.94,
+      0.0
+     ],
+     [
+      1790738051.94,
+      0.0
+     ],
+     [
+      1790738056.94,
+      0.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   }
+  ],
+  "loop_lag": [
+   {
+    "labels": {
+     "__name__": "switchyard_event_loop_lag_seconds",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0025883013928047014
+     ],
+     [
+      1790737976.94,
+      0.003326602651866301
+     ],
+     [
+      1790737981.94,
+      0.002969178778540812
+     ],
+     [
+      1790737986.94,
+      0.001555983065290712
+     ],
+     [
+      1790737991.94,
+      0.003342715092019862
+     ],
+     [
+      1790737996.94,
+      0.0024298500613322157
+     ],
+     [
+      1790738001.94,
+      0.0013932896213817013
+     ],
+     [
+      1790738006.94,
+      0.0011418181964630374
+     ],
+     [
+      1790738011.94,
+      0.0013162275348360566
+     ],
+     [
+      1790738016.94,
+      0.0016654046473106824
+     ],
+     [
+      1790738021.94,
+      0.0018045898637565072
+     ],
+     [
+      1790738026.94,
+      0.0018677927371904249
+     ],
+     [
+      1790738031.94,
+      0.00092948789751424
+     ],
+     [
+      1790738036.94,
+      0.0014383423255557174
+     ],
+     [
+      1790738041.94,
+      0.0015210879953370662
+     ],
+     [
+      1790738046.94,
+      0.0014281487077059708
+     ],
+     [
+      1790738051.94,
+      0.0012532431680864027
+     ],
+     [
+      1790738056.94,
+      0.0016613992374674242
+     ],
+     [
+      1790738061.94,
+      0.0032835924108823283
+     ]
+    ]
+   }
+  ],
+  "in_flight": [
+   {
+    "labels": {
+     "__name__": "switchyard_requests_in_flight",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway"
+    },
+    "values": [
+     [
+      1790737971.94,
+      0.0
+     ],
+     [
+      1790737976.94,
+      0.0
+     ],
+     [
+      1790737981.94,
+      0.0
+     ],
+     [
+      1790737986.94,
+      0.0
+     ],
+     [
+      1790737991.94,
+      0.0
+     ],
+     [
+      1790737996.94,
+      0.0
+     ],
+     [
+      1790738001.94,
+      1.0
+     ],
+     [
+      1790738006.94,
+      1.0
+     ],
+     [
+      1790738011.94,
+      1.0
+     ],
+     [
+      1790738016.94,
+      1.0
+     ],
+     [
+      1790738021.94,
+      1.0
+     ],
+     [
+      1790738026.94,
+      1.0
+     ],
+     [
+      1790738031.94,
+      1.0
+     ],
+     [
+      1790738036.94,
+      1.0
+     ],
+     [
+      1790738041.94,
+      1.0
+     ],
+     [
+      1790738046.94,
+      1.0
+     ],
+     [
+      1790738051.94,
+      1.0
+     ],
+     [
+      1790738056.94,
+      1.0
+     ],
+     [
+      1790738061.94,
+      0.0
+     ]
+    ]
+   }
+  ],
+  "rate_limited": [
+   {
+    "labels": {
+     "__name__": "switchyard_rate_limited_total",
+     "instance": "gateway:8000",
+     "job": "switchyard-gateway",
+     "limit": "requests"
+    },
+    "values": [
+     [
+      1790737991.94,
+      1696.0
+     ],
+     [
+      1790737996.94,
+      1696.0
+     ],
+     [
+      1790738001.94,
+      1870.0
+     ],
+     [
+      1790738006.94,
+      2095.0
+     ],
+     [
+      1790738011.94,
+      2320.0
+     ],
+     [
+      1790738016.94,
+      2545.0
+     ],
+     [
+      1790738021.94,
+      2770.0
+     ],
+     [
+      1790738026.94,
+      2995.0
+     ],
+     [
+      1790738031.94,
+      3220.0
+     ],
+     [
+      1790738036.94,
+      3445.0
+     ],
+     [
+      1790738041.94,
+      3670.0
+     ],
+     [
+      1790738046.94,
+      3895.0
+     ],
+     [
+      1790738051.94,
+      4120.0
+     ],
+     [
+      1790738056.94,
+      4345.0
+     ],
+     [
+      1790738061.94,
+      4352.0
+     ]
+    ]
+   }
+  ],
+  "semantic_skipped": [],
+  "batch_size_bucket": [],
+  "model_seconds_bucket": []
+ }
+}

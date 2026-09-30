@@ -1,0 +1,3 @@
+requests=17747 rate=147.6/s
+time="2026-09-30T03:09:00Z" level=info msg="CONTROL fault:hang at 1790737740603 status=200" source=console
+time="2026-09-30T03:09:40Z" level=info msg="CONTROL recover at 1790737780604 status=200" source=console

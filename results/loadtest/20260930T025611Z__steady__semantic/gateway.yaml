@@ -1,0 +1,93 @@
+logging:
+  level: ${SWITCHYARD_LOG_LEVEL:-INFO}
+redis:
+  url: ${REDIS_URL:-redis://redis:6379/0}
+  key_prefix: sy
+auth:
+  enabled: true
+  default_max_tokens: 256
+cache:
+  exact:
+    enabled: true
+    ttl_s: 3600
+  semantic:
+    enabled: true
+    embedding_model: sentence-transformers/all-MiniLM-L6-v2
+    candidate_threshold: 0.8
+    verifier_model: cross-encoder/quora-distilroberta-base
+    verifier_threshold: 0.992
+    ttl_s: 3600
+    max_prompt_chars: 2000
+    lookup_budget_ms: 50
+    max_queue: 64
+    torch_threads: 2
+overload:
+  enabled: true
+  max_loop_lag_ms: 50
+reliability:
+  request_timeout_s: 60
+  retry:
+    max_attempts: 2
+    base_delay_s: 0.05
+    max_delay_s: 1.0
+  circuit_breaker:
+    window_size: 20
+    min_calls: 10
+    failure_rate_threshold: 0.5
+    open_s: 10
+    half_open_max_calls: 1
+providers:
+  groq:
+    type: groq
+    base_url: https://api.groq.com/openai/v1
+    api_key: ${GROQ_API_KEY:-}
+    timeouts:
+      connect_s: 2
+      first_byte_s: 10
+      idle_s: 10
+      total_s: 30
+  ollama:
+    type: ollama
+    base_url: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434/v1}
+    timeouts:
+      connect_s: 1
+      first_byte_s: 60
+      idle_s: 30
+      total_s: 120
+  mock-primary:
+    type: mock
+    base_url: ${MOCK_PRIMARY_URL:-http://mock-primary:9000/v1}
+    timeouts:
+      connect_s: 1
+      first_byte_s: 5
+      idle_s: 5
+      total_s: 15
+  mock-secondary:
+    type: mock
+    base_url: ${MOCK_SECONDARY_URL:-http://mock-secondary:9000/v1}
+    timeouts:
+      connect_s: 1
+      first_byte_s: 5
+      idle_s: 5
+      total_s: 15
+routes:
+- model: fast
+  targets:
+  - provider: groq
+    model: llama-3.1-8b-instant
+  - provider: ollama
+    model: llama3.2:1b
+  - provider: mock-primary
+    model: mock-1
+- model: local
+  targets:
+  - provider: ollama
+    model: llama3.2:1b
+  - provider: mock-primary
+    model: mock-1
+- model: mock
+  targets:
+  - provider: mock-primary
+    model: mock-1
+  - provider: mock-secondary
+    model: mock-1

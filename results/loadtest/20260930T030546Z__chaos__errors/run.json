@@ -1,0 +1,27 @@
+{
+  "scenario": "chaos",
+  "variant": "errors",
+  "script": "chaos.js",
+  "env": {
+    "RATE": "150",
+    "DURATION_SECONDS": "120",
+    "FAULT_AT": "40",
+    "RECOVER_AT": "80",
+    "FAULT": "errors",
+    "TARGET": "http://gateway:8000"
+  },
+  "key_limits": {
+    "rpm": 100000000,
+    "tpm": 1000000000000
+  },
+  "window": {
+    "start": 1790737559.608027,
+    "end": 1790737680.296888
+  },
+  "git": {
+    "sha": "a1c349a288f43aebc0114969e5add397dc1f086e",
+    "dirty": true
+  },
+  "command": "loadtest/run.py all",
+  "k6_command": "docker run --rm --network switchyard_default --cpus 2 -v /Users/shaunak/Projects/Switchyard/loadtest:/scripts:ro -v /Users/shaunak/Projects/Switchyard/results/loadtest/20260930T030546Z__chaos__errors:/out -e K6_CSV_TIME_FORMAT=unix_milli -e RATE=150 -e DURATION_SECONDS=120 -e FAULT_AT=40 -e RECOVER_AT=80 -e FAULT=errors -e API_KEY=<redacted> -e TARGET=http://gateway:8000 grafana/k6:1.2.2 run --quiet --out csv=/out/samples.csv.gz /scripts/chaos.js"
+}

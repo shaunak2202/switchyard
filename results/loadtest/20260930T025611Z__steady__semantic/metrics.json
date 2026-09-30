@@ -1,0 +1,155 @@
+{
+  "scenario": "steady",
+  "variant": "semantic",
+  "headline": {
+    "offered_rps": 200,
+    "requests": 36001,
+    "achieved_rps": 200.0,
+    "dropped_iterations": 0,
+    "failed": 0,
+    "hit_rate": 0.7541,
+    "exact_hit_rate": 0.754,
+    "semantic_hit_rate": 0.0001
+  },
+  "outcomes": {
+    "hit-exact": 27144,
+    "hit-semantic": 3,
+    "miss": 8854,
+    "bypass": 0
+  },
+  "latency_ms_by_cache": {
+    "hit-exact": {
+      "p50": 1.491,
+      "p95": 3.562,
+      "p99": 8.295,
+      "max": 141.82,
+      "count": 27144
+    },
+    "hit-semantic": {
+      "p50": 117.9,
+      "p95": 128.201,
+      "p99": 129.117,
+      "max": 129.346,
+      "count": 3
+    },
+    "miss": {
+      "p50": 264.717,
+      "p95": 273.259,
+      "p99": 354.246,
+      "max": 459.881,
+      "count": 8854
+    },
+    "bypass": {
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0,
+      "count": 0
+    }
+  },
+  "stream_ttfb_ms_by_cache": {
+    "hit-exact": {
+      "p50": 1.491,
+      "p95": 3.558,
+      "p99": 8.896,
+      "max": 141.764,
+      "count": 13684
+    },
+    "hit-semantic": {
+      "p50": 117.85,
+      "p95": 128.147,
+      "p99": 129.062,
+      "max": 129.291,
+      "count": 3
+    },
+    "miss": {
+      "p50": 103.903,
+      "p95": 108.585,
+      "p99": 195.305,
+      "max": 284.261,
+      "count": 4362
+    },
+    "bypass": {
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0,
+      "count": 0
+    }
+  },
+  "server": {
+    "cache_lookups": {
+      "exact:hit": 26549,
+      "exact:miss": 8714,
+      "semantic:hit": 3,
+      "semantic:miss": 147
+    },
+    "semantic_verifier_rejections": 48,
+    "semantic_skipped": {
+      "lookup:budget": 8513,
+      "lookup:queue_full": 48,
+      "store:budget": 0,
+      "store:queue_full": 25
+    },
+    "model_latency_ms": {
+      "embedding": {
+        "p50": 35.018,
+        "p95": 48.534,
+        "p99": 49.735,
+        "at_least": [],
+        "count": 2519
+      },
+      "verifier": {
+        "p50": 76.02,
+        "p95": 99.439,
+        "p99": 211.75,
+        "at_least": [],
+        "count": 51
+      }
+    },
+    "batch_size_mean": {
+      "embed": 4.03,
+      "verify": 1.2
+    },
+    "overhead_ms": {
+      "false": {
+        "p50": 74.414,
+        "p95": 97.932,
+        "p99": 106.163,
+        "at_least": [],
+        "count": 4411
+      },
+      "true": {
+        "p50": 74.692,
+        "p95": 97.991,
+        "p99": 116.0,
+        "at_least": [],
+        "count": 4288
+      }
+    },
+    "ttft_ms_by_cache": {
+      "miss": {
+        "p50": 125.187,
+        "p95": 148.429,
+        "p99": 187.382,
+        "at_least": [],
+        "count": 4288
+      },
+      "hit-exact": {
+        "p50": 1.301,
+        "p95": 3.593,
+        "p99": 7.497,
+        "at_least": [],
+        "count": 13407
+      },
+      "hit-semantic": {
+        "p50": 125.0,
+        "p95": 147.5,
+        "p99": 149.5,
+        "at_least": [],
+        "count": 3
+      }
+    },
+    "shed": 0
+  }
+}

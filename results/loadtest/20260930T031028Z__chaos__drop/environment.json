@@ -1,0 +1,32 @@
+{
+  "host": {
+    "cpu": "Apple M5 Pro",
+    "cores": "15",
+    "memory_gb": 24.0,
+    "os": "macOS-26.4-arm64-arm-64bit"
+  },
+  "vm": {
+    "name": "default",
+    "status": "Running",
+    "arch": "aarch64",
+    "cpus": 6,
+    "memory": 8589934592,
+    "disk": 42949672960,
+    "runtime": "docker"
+  },
+  "docker": {
+    "server_version": "29.5.2",
+    "ncpu": 6,
+    "mem_total_gb": 7.7,
+    "kernel": "6.8.0-117-generic"
+  },
+  "images": {
+    "switchyard-gateway:dev": "sha256:51ffbcc993eb40d9ccd70ca556f2bb7e622265891a435ec1e10657222cfbbf76",
+    "switchyard-mock:dev": "sha256:dafd8411d6ba863113bff337b77c656bf070518012249078b467fd755e99a919",
+    "redis:8.2-alpine": "sha256:b51665e66f00759be7c3152ad5ac3c66fb2f619c13ef62dea7cc1f9914524635"
+  },
+  "k6_image": "grafana/k6:1.2.2",
+  "k6_version": "k6 v1.2.2 (commit/e0215db54a-dirty, go1.24.6, linux/arm64)",
+  "k6_cpus": 2,
+  "notes": "Gateway, mocks, Redis, Prometheus and k6 share the same VM. The gateway is one uvicorn process (one core); each mock is one process; k6 is limited to 2 CPUs."
+}
