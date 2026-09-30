@@ -1,7 +1,8 @@
 # Two targets from one file:
 #   mock    - the mock provider (small: FastAPI only)
-#   gateway - the gateway, plus CPU-only torch and the semantic-cache models baked in, so it
-#             starts without network access and without a first-request download
+#   gateway - the gateway. With --build-arg SEMANTIC=true it also bakes in CPU-only torch and
+#             the semantic-cache models (the tier is off by default, ADR-021), so it starts
+#             without network access and without a first-request download.
 FROM python:3.11-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -31,16 +32,18 @@ CMD ["uvicorn", "mock_provider.app:create_app", "--factory", "--host", "0.0.0.0"
 
 # ---------------------------------------------------------------------------------------------
 FROM base AS gateway
-# CPU wheels only: the default PyPI torch for x86_64 bundles CUDA (~2 GB) we would never use.
-RUN pip install torch --index-url https://download.pytorch.org/whl/cpu \
- && pip install "sentence-transformers>=3.3"
-
-ENV HF_HOME=/opt/hf
+ARG SEMANTIC=false
 ARG EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
 ARG VERIFIER_MODEL=cross-encoder/quora-distilroberta-base
-RUN python -c "from sentence_transformers import SentenceTransformer, CrossEncoder; \
+ENV HF_HOME=/opt/hf
+# CPU wheels only: the default PyPI torch for x86_64 bundles CUDA (~2 GB) we would never use.
+RUN if [ "$SEMANTIC" = "true" ]; then \
+      pip install torch --index-url https://download.pytorch.org/whl/cpu \
+      && pip install "sentence-transformers>=3.3" \
+      && python -c "from sentence_transformers import SentenceTransformer, CrossEncoder; \
 SentenceTransformer('${EMBEDDING_MODEL}', device='cpu'); CrossEncoder('${VERIFIER_MODEL}', device='cpu')" \
- && chmod -R a+rX /opt/hf
+      && chmod -R a+rX /opt/hf; \
+    fi
 # Never reach out to the Hub at runtime.
 ENV HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 TOKENIZERS_PARALLELISM=false
 

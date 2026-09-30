@@ -65,7 +65,9 @@ for chunk in client.chat.completions.create(
 ```
 
 To use real providers, put `GROQ_API_KEY` in `.env` (copied from `.env.example` by `make up`)
-and/or run Ollama on the host, then use `"model": "fast"`.
+and/or run Ollama on the host, then use `"model": "fast"`. The semantic cache is off by
+default. To try it, build with its models (`make up SEMANTIC=1`) and set
+`cache.semantic.enabled: true` in `config/gateway.yaml`.
 
 | Command | What it does |
 |---|---|

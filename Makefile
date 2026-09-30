@@ -20,9 +20,9 @@ $(BIN)/activate: pyproject.toml
 install: $(BIN)/activate ## Create the virtualenv and install dev dependencies
 
 .PHONY: up
-up: ## Build and start the full stack (gateway, mocks, redis)
+up: ## Build and start the stack; `make up SEMANTIC=1` adds the semantic-cache models
 	@test -f .env || cp .env.example .env
-	$(COMPOSE) up -d --build --wait
+	SEMANTIC=$(if $(SEMANTIC),true,false) $(COMPOSE) up -d --build --wait
 	@echo "gateway:    http://localhost:8000"
 	@echo "grafana:    http://localhost:3000  (dashboard: Switchyard gateway)"
 	@echo "prometheus: http://localhost:9090"

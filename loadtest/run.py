@@ -64,6 +64,7 @@ MOCK_DEFAULTS = {
 }
 
 RAMP_STEPS = "50,100,200,300,400,500,600,800,1000"
+# The steady-load semantic variants need the models in the image: build with `make up SEMANTIC=1`.
 
 SCENARIOS: dict[str, dict[str, Any]] = {
     # (a) max throughput / latency knee, non-streaming cache-bypass traffic

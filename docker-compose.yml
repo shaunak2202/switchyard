@@ -14,7 +14,12 @@ x-healthcheck: &http-healthcheck
 
 services:
   gateway:
-    build: { context: ., target: gateway }
+    build:
+      context: .
+      target: gateway
+      args:
+        # `make up SEMANTIC=1` bakes in torch + the semantic-cache models (~2.5 GB).
+        SEMANTIC: ${SEMANTIC:-false}
     image: switchyard-gateway:dev
     ulimits: *ulimits
     env_file:
