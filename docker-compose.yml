@@ -27,6 +27,9 @@ services:
         required: false
     environment:
       SWITCHYARD_CONFIG: /app/config/gateway.yaml
+      # Semantic tier toggles (config/gateway.yaml); the image needs `make up SEMANTIC=1`.
+      SWITCHYARD_SEMANTIC_ENABLED: ${SWITCHYARD_SEMANTIC_ENABLED:-false}
+      SWITCHYARD_SEMANTIC_LOOKUP_BUDGET_MS: ${SWITCHYARD_SEMANTIC_LOOKUP_BUDGET_MS:-50}
     ports:
       - "8000:8000"
     extra_hosts:

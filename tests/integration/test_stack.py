@@ -108,8 +108,14 @@ def test_kill_mock_mid_stream_does_not_hang_client(auth: dict[str, str]) -> None
     assert "error" in json.loads(events[-1])
 
 
-def _compose(*args: str) -> None:
-    subprocess.run(["docker", "compose", *args], check=True, capture_output=True, timeout=120)
+def _compose(*args: str, env: dict[str, str] | None = None) -> None:
+    subprocess.run(
+        ["docker", "compose", *args],
+        check=True,
+        capture_output=True,
+        timeout=120,
+        env={**os.environ, **(env or {})},
+    )
 
 
 def test_rate_limit_through_containers() -> None:
@@ -191,14 +197,33 @@ def test_kill_primary_container_mid_stream_then_fail_over(auth: dict[str, str]) 
         _compose("up", "-d", "--wait", "mock-primary")
 
 
+# The models take ~100 ms per lookup in a CPU-only container, past the shipped 50 ms budget
+# (ADR-021), so every lookup would be skipped as a miss. This test checks matching, not latency.
+SEMANTIC_TEST_ENV = {
+    "SWITCHYARD_SEMANTIC_ENABLED": "true",
+    "SWITCHYARD_SEMANTIC_LOOKUP_BUDGET_MS": "2000",
+}
+
+
+@pytest.fixture
+def semantic_gateway() -> Iterator[None]:
+    """Recreate the gateway with the semantic tier on, then restore it as it was."""
+    _compose("up", "-d", "--wait", "gateway", env=SEMANTIC_TEST_ENV)
+    try:
+        if not httpx.get(f"{GATEWAY}/status/cache", timeout=5).json()["semantic"]:
+            pytest.skip("gateway image has no semantic-cache models (make up SEMANTIC=1)")
+        yield
+    finally:
+        _compose("up", "-d", "--wait", "gateway")
+
+
+@pytest.mark.usefixtures("semantic_gateway")
 def test_semantic_cache_with_real_models(auth: dict[str, str]) -> None:
     """The baked-in embedding + verifier models, at the shipped thresholds.
 
     Each run gets a unique system prompt (part of the cache namespace, not embedded), so the
     user text stays natural: an appended random tag measurably lowers the verifier's score.
     """
-    if not httpx.get(f"{GATEWAY}/status/cache", timeout=5).json()["semantic"]:
-        pytest.skip("semantic cache is disabled in this deployment (the default; ADR-021)")
     system = f"Test run {time.monotonic_ns()}."
 
     def ask(text: str) -> httpx.Response:

@@ -82,6 +82,19 @@ def test_repo_config_file_is_valid(monkeypatch: pytest.MonkeyPatch) -> None:
     assert "mock" in {r.model for r in config.routes}
 
 
+def test_repo_config_semantic_tier_env_overrides(monkeypatch: pytest.MonkeyPatch) -> None:
+    path = Path(__file__).parents[2] / "config" / "gateway.yaml"
+    monkeypatch.delenv("SWITCHYARD_SEMANTIC_ENABLED", raising=False)
+    monkeypatch.delenv("SWITCHYARD_SEMANTIC_LOOKUP_BUDGET_MS", raising=False)
+    semantic = load_config(path).cache.semantic
+    assert (semantic.enabled, semantic.lookup_budget_ms) == (False, 50)  # ADR-021 defaults
+
+    monkeypatch.setenv("SWITCHYARD_SEMANTIC_ENABLED", "true")
+    monkeypatch.setenv("SWITCHYARD_SEMANTIC_LOOKUP_BUDGET_MS", "2000")
+    semantic = load_config(path).cache.semantic
+    assert (semantic.enabled, semantic.lookup_budget_ms) == (True, 2000)
+
+
 def test_missing_config_file() -> None:
     with pytest.raises(ConfigError, match="not found"):
         load_config("/nonexistent.yaml")

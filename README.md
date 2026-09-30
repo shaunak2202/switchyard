@@ -66,8 +66,9 @@ for chunk in client.chat.completions.create(
 
 To use real providers, put `GROQ_API_KEY` in `.env` (copied from `.env.example` by `make up`)
 and/or run Ollama on the host, then use `"model": "fast"`. The semantic cache is off by
-default. To try it, build with its models (`make up SEMANTIC=1`) and set
-`cache.semantic.enabled: true` in `config/gateway.yaml`.
+default. To try it, build with its models and switch it on:
+`SWITCHYARD_SEMANTIC_ENABLED=true make up SEMANTIC=1` (`SWITCHYARD_SEMANTIC_LOOKUP_BUDGET_MS`
+overrides the 50 ms lookup budget; see ADR-021).
 
 | Command | What it does |
 |---|---|
@@ -78,6 +79,23 @@ default. To try it, build with its models (`make up SEMANTIC=1`) and set
 | `make check` | Lint (ruff), type-check (mypy --strict) and tests: what CI runs |
 | `make loadtest` | Every k6 scenario against the mocks (~1 h); results to `results/loadtest/`, README refreshed |
 | `make eval-semantic` | Re-run the semantic-cache threshold evaluation |
+
+### Testing
+
+`make test` runs the unit and component tests (it starts Redis). `make test-integration` runs
+against the Compose stack, so `make up` first. The semantic-cache integration test needs an
+image with the models, so it skips unless the stack was built with `make up SEMANTIC=1`:
+
+```bash
+make up SEMANTIC=1
+make test-integration
+```
+
+The test recreates the gateway container with `SWITCHYARD_SEMANTIC_ENABLED=true` and
+`SWITCHYARD_SEMANTIC_LOOKUP_BUDGET_MS=2000`, then restores it. The larger budget is needed
+because on CPU the models take about 100 ms per lookup, which is over the shipped 50 ms budget,
+and every lookup would be counted as a miss. The test checks the models and match thresholds,
+not latency.
 
 ## Features and design decisions
 
