@@ -87,3 +87,8 @@ disable_error_code = ["comparison-overlap"]
 [[tool.mypy.overrides]]
 module = ["prometheus_client.*"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# The optional `semantic` extra: CI's lint job type-checks without it installed.
+module = ["sentence_transformers.*", "torch.*"]
+ignore_missing_imports = true
